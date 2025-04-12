@@ -18,6 +18,7 @@ export default function CVAnalysisDashboard() {
   const { data, file } = location.state || {};
   const [fileUrl, setFileUrl] = useState("");
   const [isOpen, setIsOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState("Soft Skills");
   const [message, setMessage] = useState("");
 
   console.log(data);
@@ -44,19 +45,28 @@ export default function CVAnalysisDashboard() {
   // Pagination des axes d'ameliorations
   const indexOfLastAxes = currentPageAxe * axesToImprovePerPage;
   const indexOfFirstAxes = indexOfLastAxes - axesToImprovePerPage;
-  const currentAxes =
-    data?.improvement_areas?.slice(indexOfFirstAxes, indexOfLastAxes) || [];
+  const currentAxesHard =
+    data?.improvement_areas?.hard_skills?.slice(
+      indexOfFirstAxes,
+      indexOfLastAxes
+    ) || [];
+
+  const currentAxesSoft =
+    data?.improvement_areas?.soft_skills?.slice(
+      indexOfFirstAxes,
+      indexOfLastAxes
+    ) || [];
   const totalPagesAxes = Math.ceil(
     (data?.improvement_areas?.length || 0) / axesToImprovePerPage
   );
 
   const getScoreColor = (score) => {
-    if (score > 75) return "#d50f18"; 
+    if (score > 75) return "#d50f18";
     if (score > 50) return "#fc516b";
-    if (score > 25) return "#3B82F6"; 
-    return "#6366F1"; 
+    if (score > 25) return "#3B82F6";
+    return "#6366F1";
   };
-  
+
   const chartData = {
     labels: ["Score", ""],
     datasets: [
@@ -67,7 +77,7 @@ export default function CVAnalysisDashboard() {
         ],
         backgroundColor: [
           getScoreColor(data?.global_evaluation?.score),
-          "#efeaea" 
+          "#efeaea",
         ],
         borderWidth: 0,
       },
@@ -128,144 +138,64 @@ export default function CVAnalysisDashboard() {
             <div className="bg-white rounded-xl shadow-sm border border-gray-300 overflow-hidden">
               <div className="p-5 border-b border-gray-300">
                 <h2 className="font-semibold text-lg text-gray-800 flex items-center">
-                  <span className="bg-gradient-to-r from-blue-400 to-violet-400 text-gray-700 p-2 rounded-lg mr-3">
-                    🛠️
-                  </span>
-                  Compétences Techniques
-                </h2>
-              </div>
-              <div className="p-4 grid grid-cols-1 md:grid-cols-2 gap-4">
-                {currentSkills.map((skill, index) => (
-                  <div
-                    key={index}
-                    className={`rounded-lg border p-4 transition-all ${
-                      activeSection === `skill-${index}`
-                        ? "border-gray-400 bg-gray-100 shadow-inner"
-                        : "border-gray-300 hover:border-gray-400 bg-white"
-                    }`}
-                    onClick={() =>
-                      setActiveSection(
-                        activeSection === `skill-${index}`
-                          ? null
-                          : `skill-${index}`
-                      )
-                    }
-                  >
-                    <div className="flex justify-between items-start">
-                      <div>
-                        <h3 className="font-medium text-gray-800 text-lg">
-                          {skill.name}
-                        </h3>
-                        <div className="flex items-center mt-2">
-                          <div className="w-32 bg-gray-300 rounded-full h-2.5 mr-3">
-                            <div
-                              className={`h-2.5 rounded-full ${
-                                skill.score > 80
-                                  ? "bg-gray-800"
-                                  : skill.score > 60
-                                  ? "bg-gradient-to-r from-blue-500 to-violet-500"
-                                  : "bg-gradient-to-l from-blue-300 to-violet-300"
-                              }`}
-                              style={{ width: `${skill.score}%` }}
-                            ></div>
-                          </div>
-                          <span className="text-sm font-medium text-gray-700">
-                            {skill.score}/100
-                          </span>
-                        </div>
-                      </div>
-                      <span
-                        className={`px-3 py-1 rounded-full text-xs font-medium ${getRiskColor(
-                          skill.risk_level
-                        )}`}
-                      >
-                        {skill.risk_level}
-                      </span>
-                    </div>
-
-                    {activeSection === `skill-${index}` && (
-                      <div className="mt-4 pt-4 border-t border-gray-300">
-                        <p className="text-gray-600">{skill.description}</p>
-                      </div>
-                    )}
-                  </div>
-                ))}
-              </div>
-              {/* Pagination */}
-              {/* Pagination améliorée */}
-              {totalPages > 1 && (
-                <div className="px-4 pb-4 flex justify-between items-center">
-                  <button
-                    onClick={() =>
-                      setCurrentPage((prev) => Math.max(prev - 1, 1))
-                    }
-                    disabled={currentPage === 1}
-                    className={`px-4 py-2 rounded-md transition-all duration-200 ${
-                      currentPage === 1
-                        ? "bg-gray-100 text-gray-400 cursor-not-allowed"
-                        : "bg-gradient-to-r from-blue-400 to-violet-400 text-white hover:from-blue-500 hover:to-violet-500 shadow-md"
-                    }`}
-                  >
-                    Précédent
-                  </button>
-
-                  <div className="flex items-center space-x-2">
-                    {Array.from({ length: totalPages }, (_, i) => (
-                      <button
-                        key={i}
-                        onClick={() => setCurrentPage(i + 1)}
-                        className={`w-8 h-8 flex items-center justify-center rounded-full text-sm font-medium transition-all ${
-                          currentPage === i + 1
-                            ? "bg-gradient-to-r from-blue-500 to-violet-500 text-white shadow-md"
-                            : "text-gray-600 hover:bg-gray-100"
-                        }`}
-                      >
-                        {i + 1}
-                      </button>
-                    ))}
-                  </div>
-
-                  <button
-                    onClick={() =>
-                      setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-                    }
-                    disabled={currentPage === totalPages}
-                    className={`px-4 py-2 rounded-md transition-all duration-200 ${
-                      currentPage === totalPages
-                        ? "bg-gray-100 text-gray-400 cursor-not-allowed"
-                        : "bg-gradient-to-r from-blue-400 to-violet-400 text-white hover:from-blue-500 hover:to-violet-500 shadow-md"
-                    }`}
-                  >
-                    Suivant
-                  </button>
-                </div>
-              )}
-            </div>
-
-            <div className="bg-white rounded-xl shadow-sm border border-gray-300 overflow-hidden">
-              <div className="p-5 border-b border-gray-300">
-                <h2 className="font-semibold text-lg text-gray-800 flex items-center">
                   <span className="bg-gray-200 text-gray-700 p-2 rounded-lg mr-3">
                     🚀
                   </span>
                   Axes d'Amélioration
                 </h2>
               </div>
-              <div className="p-4 space-y-4">
-                {currentAxes.map((area, index) => (
-                  <div
-                    key={index}
-                    className="p-4 bg-gray-50 rounded-lg border border-gray-200"
+              <div className="grid grid-cols-2 mb-4 border rounded overflow-hidden">
+                {["Hard Skills", "Soft Skills"].map((tab) => (
+                  <button
+                    key={tab}
+                    onClick={() => setActiveTab(tab)}
+                    className={`py-2 px-4 text-sm font-medium ${
+                      activeTab === tab
+                        ? "bg-gradient-to-r from-blue-500 to-violet-500 text-white"
+                        : "hover:bg-gray-100"
+                    }`}
                   >
-                    <h3 className="font-medium text-gray-800 flex items-center">
-                      {area.name}
-                    </h3>
-                    <p className="text-sm text-gray-600 mt-1">
-                      Priorité: {area.reason}
-                    </p>
-                  </div>
+                    {tab}
+                  </button>
                 ))}
               </div>
+              {activeTab == "Hard Skills" ? (
+                <div className="p-4 space-y-4">
+                  {currentAxesHard.map((area, index) => (
+                    <div
+                      key={index}
+                      className="p-4 bg-gray-50 rounded-lg border border-gray-200"
+                    >
+                      <h3 className="font-medium text-gray-800 flex items-center">
+                        {area.name}
+                      </h3>
+                      <p className="text-sm text-gray-600 mt-1">
+                        Priorité: {area.reason}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="p-4 space-y-4">
+                  {currentAxesSoft.map((area, index) => (
+                    <div
+                      key={index}
+                      className="p-4 bg-gray-50 rounded-lg border border-gray-200"
+                    >
+                      <h3 className="font-medium text-gray-800 flex items-center">
+                        <span
+                          className={`px-3 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800`}
+                        >
+                          {area.name}
+                        </span>
+                      </h3>
+                      <p className="text-sm text-gray-600 mt-1">
+                        Priorité: {area.reason}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              )}
 
               {/* Pagination modernisée */}
               {totalPagesAxes > 1 && (
@@ -357,6 +287,130 @@ export default function CVAnalysisDashboard() {
                     >
                       <path d="m9 18 6-6-6-6" />
                     </svg>
+                  </button>
+                </div>
+              )}
+            </div>
+
+            <div className="bg-white rounded-xl shadow-sm border border-gray-300 overflow-hidden">
+              <div className="p-5 border-b border-gray-300">
+                <h2 className="font-semibold text-lg text-gray-800 flex items-center">
+                  <span className="bg-gradient-to-r from-blue-400 to-violet-400 text-gray-700 p-2 rounded-lg mr-3">
+                    🛠️
+                  </span>
+                  Futur-Proof Scores
+                </h2>
+                <p>
+                  Evaluation de la resilience de votre metier face a
+                  l'automatisation par l'IA
+                </p>
+              </div>
+              <div className="p-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+                {currentSkills.map((skill, index) => (
+                  <div
+                    key={index}
+                    className={`rounded-lg border p-4 transition-all ${
+                      activeSection === `skill-${index}`
+                        ? "border-gray-400 bg-gray-100 shadow-inner"
+                        : "border-gray-300 hover:border-gray-400 bg-white"
+                    }`}
+                    onClick={() =>
+                      setActiveSection(
+                        activeSection === `skill-${index}`
+                          ? null
+                          : `skill-${index}`
+                      )
+                    }
+                  >
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <h3 className="font-medium text-gray-800 text-lg">
+                          {skill.name}
+                        </h3>
+                        <div className="flex items-center mt-2 mb-3">
+                          <div className="w-full bg-gray-300 rounded-full h-2.5 mr-3">
+                            <div
+                              className={`h-2.5 rounded-full ${
+                                skill.score > 80
+                                  ? "bg-gray-800"
+                                  : skill.score > 60
+                                  ? "bg-gradient-to-r from-blue-500 to-violet-500"
+                                  : "bg-gradient-to-l from-blue-300 to-violet-300"
+                              }`}
+                              style={{ width: `${skill.score}%` }}
+                            ></div>
+                          </div>
+                        </div>
+                        <div className="flex flex-row space-x-4 items-center">
+                          <p className="text-xs">Risque d'automatisation :</p>
+                          <span
+                            className={`px-3 py-1 rounded-full text-xs font-medium ${getRiskColor(
+                              skill.risk_level
+                            )}`}
+                          >
+                            {skill.risk_level}
+                          </span>
+                        </div>
+                      </div>
+                      <span className="text-sm font-medium text-gray-700">
+                        {skill.score}/100
+                      </span>
+                    </div>
+
+                    {activeSection === `skill-${index}` && (
+                      <div className="mt-4 pt-4 border-t border-gray-300">
+                        <p className="text-gray-600">{skill.description}</p>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+              {/* Pagination */}
+              {/* Pagination améliorée */}
+              {totalPages > 1 && (
+                <div className="px-4 pb-4 flex justify-between items-center">
+                  <button
+                    onClick={() =>
+                      setCurrentPage((prev) => Math.max(prev - 1, 1))
+                    }
+                    disabled={currentPage === 1}
+                    className={`px-4 py-2 rounded-md transition-all duration-200 ${
+                      currentPage === 1
+                        ? "bg-gray-100 text-gray-400 cursor-not-allowed"
+                        : "bg-gradient-to-r from-blue-400 to-violet-400 text-white hover:from-blue-500 hover:to-violet-500 shadow-md"
+                    }`}
+                  >
+                    Précédent
+                  </button>
+
+                  <div className="flex items-center space-x-2">
+                    {Array.from({ length: totalPages }, (_, i) => (
+                      <button
+                        key={i}
+                        onClick={() => setCurrentPage(i + 1)}
+                        className={`w-8 h-8 flex items-center justify-center rounded-full text-sm font-medium transition-all ${
+                          currentPage === i + 1
+                            ? "bg-gradient-to-r from-blue-500 to-violet-500 text-white shadow-md"
+                            : "text-gray-600 hover:bg-gray-100"
+                        }`}
+                      >
+                        {i + 1}
+                      </button>
+                    ))}
+                  </div>
+
+                  <button
+                    onClick={() =>
+                      setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+                    }
+                    disabled={currentPage === totalPages}
+                    className={`px-4 py-2 rounded-md transition-all duration-200 ${
+                      currentPage === totalPages
+                        ? "bg-gray-100 text-gray-400 cursor-not-allowed"
+                        : "bg-gradient-to-r from-blue-400 to-violet-400 text-white hover:from-blue-500 hover:to-violet-500 shadow-md"
+                    }`}
+                  >
+                    Suivant
                   </button>
                 </div>
               )}
