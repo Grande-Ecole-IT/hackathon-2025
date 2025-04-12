@@ -1,6 +1,7 @@
 import { Eye, EyeOff, Lock, Mail } from "lucide-react";
 import { useState } from "react";
 import Button from "../components/Button";
+import { useAuth } from '../hooks/useAuth';
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -8,6 +9,9 @@ const Login = () => {
     password: "",
   });
   const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const {login} = useAuth()
 
   const handleChange = (e) => {
     setFormData({
@@ -22,7 +26,17 @@ const Login = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Login data:", formData);
+    setLoading(true);
+    try {
+      login(formData).then(() =>{
+        // navigation
+      });
+    } catch(e){
+      setError(e.message ?? "Une erreur est survenue");
+    }
+    finally{
+      setLoading(false);
+    }
   };
 
   return (

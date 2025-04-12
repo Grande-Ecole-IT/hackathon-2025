@@ -1,11 +1,15 @@
-import { File, FileText, Upload, X } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { File, FileText, Loader, Upload, X } from "lucide-react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Button from "./Button";
+
 
 const Modal = ({ isOpen, onClose }) => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [preview, setPreview] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
   const modalRef = useRef(null);
+  const endpoint = "https://hackathon-2025-back.onrender.com/resume-risk";
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
@@ -24,16 +28,33 @@ const Modal = ({ isOpen, onClose }) => {
     }
   };
 
-  const handleDiagnose = () => {
+  const handleDiagnose = async () => {
     console.log("Fichier sélectionné:", selectedFile);
-    onClose();
+    setLoading(true);
+    if (!selectedFile) return;
+    const formData = new FormData();
+    formData.append("resume", selectedFile);
+    const response = await fetch(endpoint, {
+      method: "POST",
+      body: formData,
+      headers: {
+        "Accept": "application/json",
+        },
+    });
+    if (!response.ok) {
+      console.error("Erreur lors de l'envoi du fichier:", response.statusText);
+      return;
+    }
+    const data = await response.json();
+    console.log("Réponse du serveur:", data);
+    setLoading(false);
   };
 
-  const handleClickOutside = (event) => {
+  const handleClickOutside = useCallback((event) => {
     if (modalRef.current && !modalRef.current.contains(event.target)) {
       onClose();
     }
-  };
+  },[onClose]);
 
   useEffect(() => {
     if (isOpen) {
@@ -47,7 +68,7 @@ const Modal = ({ isOpen, onClose }) => {
       document.removeEventListener("mousedown", handleClickOutside);
       document.body.style.overflow = "unset";
     };
-  }, [isOpen]);
+  }, [handleClickOutside, isOpen]);
 
   const renderFilePreview = () => {
     if (selectedFile?.type.match("image.*")) {
@@ -145,7 +166,12 @@ const Modal = ({ isOpen, onClose }) => {
             disabled={!selectedFile}
             color="dark"
           >
+          {loading ? (
+            <Loader className="animate-spin"/>
+          ) : null}
+            <span>
             Diagnostiquer
+            </span>
           </Button>
         </div>
       </div>

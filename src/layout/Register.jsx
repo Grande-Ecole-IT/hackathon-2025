@@ -1,14 +1,18 @@
 import { Eye, EyeOff, Lock, Mail, User } from "lucide-react";
 import { useState } from "react";
 import Button from "../components/Button";
+import { useAuth } from "../hooks/useAuth";
 
 const Register = () => {
   const [formData, setFormData] = useState({
-    name: "",
+    username: "",
     email: "",
     password: "",
   });
   const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const { register } = useAuth();
 
   const handleChange = (e) => {
     setFormData({
@@ -21,9 +25,17 @@ const Register = () => {
     setShowPassword(!showPassword);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Register data:", formData);
+    setLoading(true);
+    try {
+      await register(formData);
+    } catch (error) {
+      setError(error.message)
+    }
+    finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -38,9 +50,9 @@ const Register = () => {
             <User className="text-gray-500 dark:text-gray-400 mr-3 w-5 h-5" />
             <input
               type="text"
-              name="name"
+              name="username"
               placeholder="Nom complet"
-              value={formData.name}
+              value={formData.username}
               onChange={handleChange}
               className="w-full bg-transparent outline-none text-gray-700 dark:text-gray-200 placeholder-gray-400"
               required
@@ -90,7 +102,7 @@ const Register = () => {
         </div>
 
         <Button type="submit" className="w-full" color="dark">
-          S'inscrire
+          <span>S'inscrire</span>
         </Button>
 
         <p className="text-center mt-4 text-sm text-gray-500 dark:text-gray-400">
