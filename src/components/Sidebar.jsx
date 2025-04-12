@@ -1,6 +1,5 @@
 import {
   Inbox,
-  KanbanSquare,
   LayoutDashboard,
   LogIn,
   Menu,
@@ -50,27 +49,10 @@ const Sidebar = () => {
                 dark:text-white dark:hover:bg-gray-700"
               >
                 <LayoutDashboard className="w-5 h-5 text-gray-500 dark:text-gray-400" />
-                <span className="ml-3">Dashboard</span>
+                <span className="ml-3">Home</span>
               </a>
             </li>
-            <li>
-              <a
-                href="#"
-                className="flex items-center p-2 rounded-lg
-                text-gray-900 hover:bg-gray-100
-                dark:text-white dark:hover:bg-gray-700"
-              >
-                <KanbanSquare className="w-5 h-5 text-gray-500 dark:text-gray-400" />
-                <span className="ml-3">Kanban</span>
-                <span
-                  className="inline-flex items-center justify-center px-2 ml-3 text-sm
-                text-gray-800 bg-gray-200 rounded-full
-                dark:text-gray-300 dark:bg-gray-700"
-                >
-                  Pro
-                </span>
-              </a>
-            </li>
+
             <li>
               <a
                 href="#"
