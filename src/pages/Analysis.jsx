@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { Doughnut } from "react-chartjs-2";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { useLocation } from "react-router";
+import { MessageCircle, X, Send } from "lucide-react";
+import FloatingChatBot from "../components/FloatingChatBot";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -14,8 +16,10 @@ export default function CVAnalysisDashboard() {
   const location = useLocation();
   const { data, file } = location.state || {};
   const [fileUrl, setFileUrl] = useState("");
+  const [isOpen, setIsOpen] = useState(false);
+  const [message, setMessage] = useState("");
 
-  console.log(data)
+  console.log(data);
 
   useEffect(() => {
     if (file) {
@@ -27,19 +31,23 @@ export default function CVAnalysisDashboard() {
     }
   }, [file]);
 
-  
   // Pagination des compétences
   const indexOfLastSkill = currentPage * skillsPerPage;
   const indexOfFirstSkill = indexOfLastSkill - skillsPerPage;
-  const currentSkills = data?.hard_skills?.slice(indexOfFirstSkill, indexOfLastSkill) || [];
-  const totalPages = Math.ceil((data?.hard_skills?.length || 0) / skillsPerPage);
+  const currentSkills =
+    data?.hard_skills?.slice(indexOfFirstSkill, indexOfLastSkill) || [];
+  const totalPages = Math.ceil(
+    (data?.hard_skills?.length || 0) / skillsPerPage
+  );
 
-  
   // Pagination des axes d'ameliorations
   const indexOfLastAxes = currentPageAxe * axesToImprovePerPage;
   const indexOfFirstAxes = indexOfLastAxes - axesToImprovePerPage;
-  const currentAxes = data?.improvement_areas?.slice(indexOfFirstAxes, indexOfLastAxes) || [];
-  const totalPagesAxes = Math.ceil((data?.improvement_areas?.length || 0) / axesToImprovePerPage);
+  const currentAxes =
+    data?.improvement_areas?.slice(indexOfFirstAxes, indexOfLastAxes) || [];
+  const totalPagesAxes = Math.ceil(
+    (data?.improvement_areas?.length || 0) / axesToImprovePerPage
+  );
 
   // Formatage des données pour le graphique
   const chartData = {
@@ -232,35 +240,10 @@ export default function CVAnalysisDashboard() {
                     <p className="text-sm text-gray-600 mt-1">
                       Priorité: {area.reason}/5
                     </p>
-                    <div className="mt-3">
-                      <p className="text-xs font-medium text-gray-500 mb-1">
-                        Ressources suggérées:
-                      </p>
-                      <div className="space-y-2">
-                        {area.resources.map((resource, i) => (
-                          <div
-                            key={i}
-                            className="text-sm bg-white p-3 rounded-lg border border-gray-300"
-                          >
-                            <a
-                              href={resource.url}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-blue-600 hover:underline"
-                            >
-                              {resource.title || resource.name}
-                            </a>
-                            <p className="text-xs text-gray-500 mt-1">
-                              {resource.author || resource.provider}
-                            </p>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
                   </div>
                 ))}
               </div>
-              
+
               {/* Pagination */}
               {totalPagesAxes > 1 && (
                 <div className="px-4 pb-4 flex justify-between items-center">
@@ -282,7 +265,9 @@ export default function CVAnalysisDashboard() {
                   </span>
                   <button
                     onClick={() =>
-                      setCurrentPageAxe((prev) => Math.min(prev + 1, totalPagesAxes))
+                      setCurrentPageAxe((prev) =>
+                        Math.min(prev + 1, totalPagesAxes)
+                      )
                     }
                     disabled={currentPageAxe === totalPagesAxes}
                     className={`px-4 py-2 rounded-md ${
@@ -360,6 +345,8 @@ export default function CVAnalysisDashboard() {
           </div>
         </div>
       </div>
+      {/* Floating Chat Icon - ABSOLUTE POSITION */}
+      <FloatingChatBot isOpen={isOpen} setIsOpen={setIsOpen} />
     </div>
   );
 }
