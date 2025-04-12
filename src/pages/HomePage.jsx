@@ -7,6 +7,7 @@ import FilterSidebar from "../components/FilterSidebar";
 import JobList from "../components/JobList";
 import Modal from "../components/Modal";
 import Navbar from "../components/Navbar";
+import { MessageCircle, X, Send } from "lucide-react";
 
 const HomePage = () => {
   const [jobs, setJobs] = useState([]);
@@ -17,6 +18,8 @@ const HomePage = () => {
   const [expandedCard, setExpandedCard] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [showScrollTop, setShowScrollTop] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const [message, setMessage] = useState("");
 
   const jobsUri = "https://hackathon-2025-back.onrender.com/job-trend";
 
@@ -190,6 +193,29 @@ const HomePage = () => {
       </div>
 
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+      {/* Floating Chat Icon - ABSOLUTE POSITION */}
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className="fixed bottom-6 right-6 z-50 bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-4 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110"
+        style={{
+          position: "fixed", // Double assurance pour le positionnement
+          right: "24px", // 6 * 4px = 24px
+          bottom: "24px", // 6 * 4px = 24px
+        }}
+        aria-label="Ouvrir le chat"
+      >
+        {isOpen ? (
+          <X className="h-6 w-6" />
+        ) : (
+          <div className="relative">
+            <MessageCircle className="h-6 w-6" />
+            <span className="absolute -top-1 -right-1 h-4 w-4 bg-red-500 rounded-full flex items-center justify-center text-xs text-white animate-pulse">
+              1
+            </span>
+          </div>
+        )}
+      </button>
+      <FloatingChatBot isOpen={isOpen} setIsOpen={setIsOpen} />
     </div>
   );
 };
