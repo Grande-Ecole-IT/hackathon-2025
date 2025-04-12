@@ -5,8 +5,7 @@ import HomePage from "./pages/HomePage";
 import LandingPage from "./pages/LandingPage";
 import AuthProvider from "./providers/AuthProvider";
 import Actuality from "./pages/Actuality";
-import AuthProvider from "./providers/AuthProvider";
-import { BrowserRouter as Router, Routes, Route } from "react-router";
+import CVAnalysisDashboard from "./pages/Analysis";
 
 const App = () => {
   return (
