@@ -74,7 +74,7 @@ const FilterSidebar = ({ onFilter }) => {
 
       <button
         onClick={() => onFilter(filters)}
-        className="mt-6 w-full bg-black text-white py-2 px-4 rounded-lg hover:bg-gray-800 transition-colors"
+        className="mt-6 w-full bg-gradient-to-r from-blue-500 to-violet-500 text-white py-2 px-4 rounded-lg hover:bg-gray-800 transition-colors"
       >
         Apply Filters
       </button>
