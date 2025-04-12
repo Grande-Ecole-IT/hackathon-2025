@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Doughnut } from "react-chartjs-2";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
+import Navbar from "../components/Navbar";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -89,16 +90,17 @@ export default function CVAnalysisDashboard() {
     labels: ["Score", ""],
     datasets: [{
       data: [data.globalScore.score, 100 - data.globalScore.score],
-      backgroundColor: ["#6366F1", "#F3F4F6"],
+      backgroundColor: ["#EF4444", "#F3F4F6"], // Rouge pour le score, gris clair pour le reste
       borderWidth: 0,
     }]
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
-      <div className="">
+    <div className="min-h-screen bg-gray-100 p-6">
+      <Navbar />
+      <div className="mt-10">
         <header className="mb-8 text-center">
-          <h1 className="text-3xl font-bold text-gray-900 bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text">
+          <h1 className="text-3xl font-bold text-gray-800">
             Analyse de Compétences
           </h1>
           <p className="text-lg text-gray-600 mt-2">
@@ -108,10 +110,10 @@ export default function CVAnalysisDashboard() {
 
         <div className="w-full grid grid-cols-1 lg:grid-cols-[2fr_2.8fr_1.2fr] gap-6">
           {/* Colonne de gauche - CV en grand format */}
-          <div className="bg-white rounded-xl shadow-md border border-gray-200 overflow-hidden flex flex-col">
-            <div className="p-4 border-b border-gray-200">
+          <div className="bg-white rounded-xl shadow-sm border border-gray-300 overflow-hidden flex flex-col">
+            <div className="p-4 border-b border-gray-300">
               <h2 className="font-semibold text-lg text-gray-800 flex items-center">
-                <span className="bg-indigo-100 text-indigo-600 p-2 rounded-lg mr-3">
+                <span className="bg-gray-200 text-gray-700 p-2 rounded-lg mr-3">
                   📄
                 </span>
                 Votre CV
@@ -128,10 +130,10 @@ export default function CVAnalysisDashboard() {
 
           {/* Colonne centrale - Compétences détaillées */}
           <div className="space-y-6">
-            <div className="bg-white rounded-xl shadow-md border border-gray-200 overflow-hidden">
-              <div className="p-5 border-b border-gray-200">
+            <div className="bg-white rounded-xl shadow-sm border border-gray-300 overflow-hidden">
+              <div className="p-5 border-b border-gray-300">
                 <h2 className="font-semibold text-lg text-gray-800 flex items-center">
-                  <span className="bg-blue-100 text-blue-600 p-2 rounded-lg mr-3">
+                  <span className="bg-gray-200 text-gray-700 p-2 rounded-lg mr-3">
                     🛠️
                   </span>
                   Analyse des Compétences Techniques
@@ -143,8 +145,8 @@ export default function CVAnalysisDashboard() {
                     key={index}
                     className={`rounded-lg border p-4 transition-all ${
                       activeSection === `skill-${index}`
-                        ? "border-indigo-300 bg-indigo-50 shadow-inner"
-                        : "border-gray-200 hover:border-indigo-200 bg-gray-50"
+                        ? "border-gray-400 bg-gray-100 shadow-inner"
+                        : "border-gray-300 hover:border-gray-400 bg-white"
                     }`}
                     onClick={() => setActiveSection(activeSection === `skill-${index}` ? null : `skill-${index}`)}
                   >
@@ -152,12 +154,12 @@ export default function CVAnalysisDashboard() {
                       <div>
                         <h3 className="font-medium text-gray-800 text-lg">{skill.name}</h3>
                         <div className="flex items-center mt-2">
-                          <div className="w-32 bg-gray-200 rounded-full h-2.5 mr-3">
+                          <div className="w-32 bg-gray-300 rounded-full h-2.5 mr-3">
                             <div
                               className={`h-2.5 rounded-full ${
-                                skill.score > 80 ? "bg-emerald-500" :
-                                skill.score > 60 ? "bg-blue-500" :
-                                "bg-amber-500"
+                                skill.score > 80 ? "bg-gray-800" :
+                                skill.score > 60 ? "bg-gray-600" :
+                                "bg-gray-400"
                               }`}
                               style={{ width: `${skill.score}%` }}
                             ></div>
@@ -168,32 +170,32 @@ export default function CVAnalysisDashboard() {
                         </div>
                       </div>
                       <span className={`px-3 py-1 rounded-full text-xs font-medium ${
-                        skill.score > 80 ? "bg-emerald-100 text-emerald-800" :
-                        skill.score > 60 ? "bg-blue-100 text-blue-800" :
-                        "bg-amber-100 text-amber-800"
+                        skill.score > 80 ? "bg-gray-800 text-white" :
+                        skill.score > 60 ? "bg-gray-600 text-white" :
+                        "bg-gray-400 text-gray-800"
                       }`}>
                         {skill.status}
                       </span>
                     </div>
 
                     {activeSection === `skill-${index}` && (
-                      <div className="mt-4 pt-4 border-t border-gray-200">
+                      <div className="mt-4 pt-4 border-t border-gray-300">
                         <div className="grid grid-cols-2 gap-4 text-sm">
                           <div>
-                            <p className="text-gray-500 font-medium">Niveau</p>
+                            <p className="text-gray-600 font-medium">Niveau</p>
                             <p className="text-gray-800">{skill.details.niveau}</p>
                           </div>
                           <div>
-                            <p className="text-gray-500 font-medium">Expérience</p>
+                            <p className="text-gray-600 font-medium">Expérience</p>
                             <p className="text-gray-800">{skill.details.projets}</p>
                           </div>
                           <div>
-                            <p className="text-gray-500 font-medium">Technologies</p>
+                            <p className="text-gray-600 font-medium">Technologies</p>
                             <p className="text-gray-800">{skill.details.technologies || skill.details.outils || skill.details.methodologies}</p>
                           </div>
                           <div>
-                            <p className="text-gray-500 font-medium">Recommandation</p>
-                            <p className="text-indigo-600">{skill.details.recommandation}</p>
+                            <p className="text-gray-600 font-medium">Recommandation</p>
+                            <p className="text-gray-700">{skill.details.recommandation}</p>
                           </div>
                         </div>
                       </div>
@@ -203,10 +205,10 @@ export default function CVAnalysisDashboard() {
               </div>
             </div>
 
-            <div className="bg-white rounded-xl shadow-md border border-gray-200 overflow-hidden">
-              <div className="p-5 border-b border-gray-200">
+            <div className="bg-white rounded-xl shadow-sm border border-gray-300 overflow-hidden">
+              <div className="p-5 border-b border-gray-300">
                 <h2 className="font-semibold text-lg text-gray-800 flex items-center">
-                  <span className="bg-amber-100 text-amber-600 p-2 rounded-lg mr-3">
+                  <span className="bg-gray-200 text-gray-700 p-2 rounded-lg mr-3">
                     🚀
                   </span>
                   Axes d'Amélioration
@@ -214,9 +216,9 @@ export default function CVAnalysisDashboard() {
               </div>
               <div className="p-4 space-y-4">
                 {data.improvementAreas.map((area, index) => (
-                  <div key={index} className="p-4 bg-amber-50 rounded-lg border border-amber-100">
+                  <div key={index} className="p-4 bg-gray-50 rounded-lg border border-gray-200">
                     <h3 className="font-medium text-gray-800 flex items-center">
-                      <span className="bg-amber-100 text-amber-600 p-1.5 rounded-lg mr-2">
+                      <span className="bg-gray-200 text-gray-700 p-1.5 rounded-lg mr-2">
                         {index + 1}
                       </span>
                       {area.name}
@@ -226,7 +228,7 @@ export default function CVAnalysisDashboard() {
                       <p className="text-xs font-medium text-gray-500 mb-1">Ressources suggérées:</p>
                       <div className="flex flex-wrap gap-2">
                         {area.resources.map((resource, i) => (
-                          <span key={i} className="text-xs bg-white px-3 py-1 rounded-full border border-gray-200">
+                          <span key={i} className="text-xs bg-white px-3 py-1 rounded-full border border-gray-300">
                             {resource}
                           </span>
                         ))}
@@ -240,10 +242,10 @@ export default function CVAnalysisDashboard() {
 
           {/* Colonne de droite - Score global et synthèse */}
           <div className="space-y-6">
-            <div className="bg-white rounded-xl shadow-md border border-gray-200 overflow-hidden">
-              <div className="p-5 border-b border-gray-200">
+            <div className="bg-white rounded-xl shadow-sm border border-gray-300 overflow-hidden">
+              <div className="p-5 border-b border-gray-300">
                 <h2 className="font-semibold text-lg text-gray-800 flex items-center">
-                  <span className="bg-purple-100 text-purple-600 p-2 rounded-lg mr-3">
+                  <span className="bg-gray-200 text-gray-700 p-2 rounded-lg mr-3">
                     📊
                   </span>
                   Score Global
@@ -264,9 +266,9 @@ export default function CVAnalysisDashboard() {
                     </span>
                     <span className="text-sm text-gray-500">/100</span>
                     <span className={`mt-2 px-3 py-1 rounded-full text-sm font-medium ${
-                      data.globalScore.score > 80 ? "bg-emerald-100 text-emerald-800" :
-                      data.globalScore.score > 60 ? "bg-blue-100 text-blue-800" :
-                      "bg-amber-100 text-amber-800"
+                      data.globalScore.score > 80 ? "bg-gray-800 text-white" :
+                      data.globalScore.score > 60 ? "bg-gray-600 text-white" :
+                      "bg-gray-400 text-gray-800"
                     }`}>
                       {data.globalScore.label}
                     </span>
@@ -280,42 +282,12 @@ export default function CVAnalysisDashboard() {
                     <div key={index} className="flex items-center p-3 bg-gray-50 rounded-lg">
                       <span className="text-xl mr-3">{detail.icon}</span>
                       <div>
-                        <p className="text-xs text-gray-500">{detail.label}</p>
+                        <p className="text-xs text-gray-600">{detail.label}</p>
                         <p className="font-medium text-gray-800">{detail.value}</p>
                       </div>
                     </div>
                   ))}
                 </div>
-              </div>
-            </div>
-
-            <div className="bg-white rounded-xl shadow-md border border-gray-200 overflow-hidden">
-              <div className="p-5 border-b border-gray-200">
-                <h2 className="font-semibold text-lg text-gray-800 flex items-center">
-                  <span className="bg-green-100 text-green-600 p-2 rounded-lg mr-3">
-                    📌
-                  </span>
-                  Comparaison
-                </h2>
-              </div>
-              <div className="p-4">
-                <div className="flex items-center justify-between mb-3">
-                  <span className="text-gray-700">Votre score</span>
-                  <span className="font-medium text-gray-800">{data.globalScore.score}/100</span>
-                </div>
-                <div className="flex items-center justify-between mb-4">
-                  <span className="text-gray-700">Moyenne des pairs</span>
-                  <span className="font-medium text-gray-800">{data.comparison.averageScore}/100</span>
-                </div>
-                <div className="w-full bg-gray-200 rounded-full h-2.5">
-                  <div
-                    className="bg-indigo-600 h-2.5 rounded-full"
-                    style={{ width: `${data.comparison.percentile}%` }}
-                  ></div>
-                </div>
-                <p className="text-center text-sm text-gray-600 mt-2">
-                  {data.comparison.text}
-                </p>
               </div>
             </div>
           </div>

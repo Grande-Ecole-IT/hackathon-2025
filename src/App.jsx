@@ -4,7 +4,6 @@ import Register from "./layout/Register";
 import HomePage from "./pages/HomePage";
 import LandingPage from "./pages/LandingPage";
 import AuthProvider from "./providers/AuthProvider";
-import Actuality from "./pages/Actuality";
 import CVAnalysisDashboard from "./pages/Analysis";
 
 const App = () => {
@@ -16,6 +15,7 @@ const App = () => {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/home" element={<HomePage />} />
+          <Route path="/analysis" element={<CVAnalysisDashboard />} />
         </Routes>
       </AuthProvider>
     </Router>
