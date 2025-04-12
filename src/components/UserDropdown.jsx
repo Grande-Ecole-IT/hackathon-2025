@@ -2,14 +2,11 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { ChevronDown, LogOut, Settings, User } from "lucide-react";
 import { useState } from "react";
+import { useAuth } from "../hooks/useAuth";
 
 const UserDropdown = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [user] = useState({
-    name: "Jean Dupont",
-    email: "jean.dupont@example.com",
-    avatar: null,
-  });
+  const { user, logout } = useAuth();
 
   return (
     <div className="relative">
@@ -25,7 +22,7 @@ const UserDropdown = () => {
           dark:hover:shadow-[2px_2px_5px_#0a0a0a,-2px_-2px_5px_#1e1e1e]
           transition-all duration-200`}
       >
-        {user.avatar ? (
+        {user?.avatar ? (
           <img src={user.avatar} alt="User" className="w-8 h-8 rounded-full" />
         ) : (
           <div className="w-8 h-8 rounded-full bg-gray-300 dark:bg-gray-600 flex items-center justify-center">
@@ -35,10 +32,10 @@ const UserDropdown = () => {
 
         <div className="text-left hidden md:block">
           <p className="text-sm font-medium text-gray-800 dark:text-gray-200">
-            {user.name}
+            {user?.username || "Utilisateur"}
           </p>
           <p className="text-xs text-gray-500 dark:text-gray-400">
-            {user.email}
+            {user?.email}
           </p>
         </div>
 
@@ -65,10 +62,10 @@ const UserDropdown = () => {
           >
             <div className="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
               <p className="text-sm font-medium text-gray-800 dark:text-gray-200">
-                {user.name}
+                {user?.username || "Utilisateur"}
               </p>
               <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
-                {user.email}
+                {user?.email}
               </p>
             </div>
 
@@ -82,6 +79,7 @@ const UserDropdown = () => {
             </button>
 
             <button
+              onClick={logout}
               className="w-full px-4 py-2 text-left text-sm flex items-center gap-2
               hover:bg-gray-100 dark:hover:bg-gray-700
               text-gray-700 dark:text-gray-300"

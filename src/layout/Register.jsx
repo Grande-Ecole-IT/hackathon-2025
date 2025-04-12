@@ -1,5 +1,6 @@
 import { Eye, EyeOff, Lock, Mail, User } from "lucide-react";
 import { useState } from "react";
+import { Link } from "react-router";
 import Button from "../components/Button";
 import { useAuth } from "../hooks/useAuth";
 
@@ -108,7 +109,7 @@ const Register = () => {
         <p className="text-center mt-4 text-sm text-gray-500 dark:text-gray-400">
           Déjà un compte ?{" "}
           <button type="button" className="text-blue-500 hover:underline">
-            Se connecter
+            <Link to="/login">Se connecter</Link>
           </button>
         </p>
       </form>

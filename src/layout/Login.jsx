@@ -1,5 +1,6 @@
 import { Eye, EyeOff, Lock, Mail } from "lucide-react";
 import { useState } from "react";
+import { Link } from "react-router";
 import Button from "../components/Button";
 import { useAuth } from '../hooks/useAuth';
 
@@ -40,7 +41,7 @@ const Login = () => {
   };
 
   return (
-    <div className="w-full max-w-sm bg-white dark:bg-gray-800 rounded-xl p-8 shadow-lg dark:shadow-gray-900 border border-gray-200 dark:border-gray-700">
+    <div className="w-full max-w-md bg-white dark:bg-gray-800 rounded-xl p-8 shadow-lg dark:shadow-gray-900 border border-gray-200 dark:border-gray-700">
       <h2 className="text-2xl font-bold text-center mb-6 text-gray-800 dark:text-white">
         Connexion
       </h2>
@@ -94,7 +95,7 @@ const Login = () => {
         <p className="text-center mt-4 text-sm text-gray-500 dark:text-gray-400">
           Pas de compte ?{" "}
           <button type="button" className="text-blue-500 hover:underline">
-            Créer un compte
+            <Link to="/register">Créer un compte</Link>
           </button>
         </p>
       </form>
