@@ -47,7 +47,7 @@ const Modal = ({ isOpen, onClose }) => {
     }
     const data = await response.json();
     console.log("Réponse du serveur:", data);
-    setLoading(false);
+    setLoading(false);                                
   };
 
   const handleClickOutside = useCallback((event) => {

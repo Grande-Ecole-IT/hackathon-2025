@@ -4,6 +4,7 @@ import FilterSidebar from "../components/FilterSidebar";
 import JobList from "../components/JobList";
 import Modal from "../components/Modal";
 import Navbar from "../components/Navbar";
+import CardSkeleton from "../components/CardSkeleton";
 
 const HomePage = () => {
   const [jobs, setJobs] = useState([]);
@@ -101,9 +102,10 @@ const HomePage = () => {
               </div>
 
               {loading && (
-                <div className="text-center py-12">
-                  <div className="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-black"></div>
-                  <p className="mt-2 text-gray-700">Loading job trends...</p>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+                   <CardSkeleton />
+                   <CardSkeleton />
+                   <CardSkeleton />
                 </div>
               )}
 
