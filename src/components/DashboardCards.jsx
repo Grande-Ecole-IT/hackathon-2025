@@ -1,19 +1,19 @@
 import { Link } from "react-router";
 import Button from "./Button";
 
-const DashboardCard = ({ title, value, description, color, children }) => {
-  const bgColor = color === "black" ? "bg-gray-800" : "bg-white";
-  const textColor = color === "black" ? "text-white" : "text-gray-900";
-
+const DashboardCard = ({ title, value, description, children }) => {
   return (
     <div
-      className={`${bgColor} ${textColor} p-6 rounded-xl h-full 
-                  transform hover:-translate-y-1 transition-transform duration-300
-                  shadow-[0_10px_20px_rgba(0,0,0,0.1)]`}
+      className="bg-white/90 backdrop-blur-sm p-6 rounded-xl h-full 
+                   border border-gray-200 shadow-md
+                   transform hover:-translate-y-1 transition-all duration-300
+                   hover:shadow-lg relative overflow-hidden"
     >
-      <h3 className="text-lg font-bold mb-2">{title}</h3>
-      <p className="text-2xl font-extrabold mb-2">{value}</p>
-      <p className="text-sm opacity-80 mb-4">{description}</p>
+      <h3 className="text-lg font-semibold mb-2 text-gray-800">{title}</h3>
+      <p className="text-3xl font-bold mb-2 bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-violet-500">
+        {value}
+      </p>
+      <p className="text-sm text-gray-600 mb-4">{description}</p>
       {children}
     </div>
   );
@@ -26,9 +26,11 @@ const DashboardCards = ({ onOpenModal }) => {
         title="Diagnostic de CV"
         value="85%"
         description="Évalue ton CV par rapport au marché"
-        color="white"
       >
-        <Button onClick={onOpenModal} color="dark" type="button">
+        <Button
+          onClick={onOpenModal}
+          className="w-full mt-4 bg-gradient-to-r from-blue-500 to-violet-500 text-white hover:from-blue-600 hover:to-violet-600"
+        >
           Evaluer mon CV
         </Button>
       </DashboardCard>
@@ -36,10 +38,9 @@ const DashboardCards = ({ onOpenModal }) => {
       <DashboardCard
         title="Idée de business"
         value="Personnalisée"
-        description="Génère une idée de business adaptée à ton profil"
-        color="black"
+        description="Génère une idée adaptée à ton profil"
       >
-        <Button color="light" type="button">
+        <Button className="w-full mt-4 bg-gradient-to-r from-blue-500 to-violet-500 text-white hover:from-blue-600 hover:to-violet-600">
           <Link to="/business-ideas">Générer une idée</Link>
         </Button>
       </DashboardCard>

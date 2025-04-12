@@ -1,4 +1,4 @@
-// eslint-disable-next-line no-unused-vars
+/* eslint-disable no-unused-vars */
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import CardSkeleton from "../components/CardSkeleton";
@@ -74,7 +74,7 @@ const HomePage = () => {
   }, [searchTerm, jobs]);
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-gradient-to-b from-blue-50/30 to-violet-50/30">
       <Navbar />
       <div className="w-full h-auto pt-24 pb-10">
         <div className="container mx-auto px-4">
@@ -86,20 +86,22 @@ const HomePage = () => {
             </div>
 
             <div className="lg:w-3/4">
-              <h3 className="py-6 text-2xl">Les métiers tendances:</h3>
+              <h3 className="py-6 text-2xl text-gray-800 font-medium">
+                Les métiers tendances:
+              </h3>
 
-              <div className="bg-white p-6 rounded-xl shadow-sm mb-6">
+              <div className="bg-white/80 backdrop-blur-sm p-6 rounded-xl shadow-sm mb-6 border-2 border-blue-100/50">
                 <div className="relative">
                   <input
                     type="text"
-                    placeholder="Search jobs or skills..."
-                    className="w-full px-4 py-3 rounded-lg border border-gray-200 
-                              focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent"
+                    placeholder="Rechercher des métiers ou compétences..."
+                    className="w-full px-4 py-3 rounded-lg border-2 border-blue-100/60 bg-white/50 
+                              focus:outline-none focus:ring-2 focus:ring-violet-300 focus:border-transparent"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                   />
                   <svg
-                    className="absolute right-3 top-3.5 h-5 w-5 text-gray-400"
+                    className="absolute right-3 top-3.5 h-5 w-5 text-blue-400"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -124,37 +126,37 @@ const HomePage = () => {
 
               {error && (
                 <div
-                  className="bg-white text-gray-800 p-4 rounded-xl border border-gray-200 
+                  className="bg-white/80 backdrop-blur-sm p-6 rounded-xl border-2 border-blue-100/50 
                               shadow-sm text-center max-w-md mx-auto"
                 >
-                  <p className="font-medium text-red-600">
-                    Error loading jobs:
+                  <p className="font-medium text-red-500">
+                    Erreur lors du chargement:
                   </p>
-                  <p className="mb-3">{error}</p>
+                  <p className="mb-3 text-gray-700">{error}</p>
                   <button
                     onClick={() => window.location.reload()}
-                    className="mt-3 bg-black text-white font-medium py-2 px-4 rounded-lg 
-                              hover:bg-gray-800 transition-colors"
+                    className="mt-3 bg-gradient-to-r from-blue-500 to-violet-500 text-white font-medium py-2 px-4 rounded-lg 
+                              hover:from-blue-600 hover:to-violet-600 transition-colors"
                   >
-                    Retry
+                    Réessayer
                   </button>
                 </div>
               )}
               {!loading && !error && (
                 <>
                   {filteredJobs.length === 0 ? (
-                    <div className="text-center py-12">
+                    <div className="text-center py-12 bg-white/80 backdrop-blur-sm rounded-xl border-2 border-blue-100/50 p-6">
                       <p className="text-gray-700">
-                        No jobs found matching your criteria.
+                        Aucun métier trouvé correspondant à vos critères.
                       </p>
                       <button
                         onClick={() => {
                           setSearchTerm("");
                           setFilteredJobs(jobs);
                         }}
-                        className="mt-4 text-black font-medium hover:underline"
+                        className="mt-4 text-violet-600 font-medium hover:underline"
                       >
-                        Clear all filters
+                        Réinitialiser les filtres
                       </button>
                     </div>
                   ) : (
@@ -179,7 +181,7 @@ const HomePage = () => {
           >
             <button
               onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-              className="pointer-events-auto bg-black/80 backdrop-blur text-white px-6 py-3 rounded-full shadow-xl hover:bg-black transition-all"
+              className="pointer-events-auto bg-gradient-to-r from-blue-500 to-violet-500 backdrop-blur text-white px-6 py-3 rounded-full shadow-xl hover:from-blue-600 hover:to-violet-600 transition-all"
             >
               Retour en haut
             </button>

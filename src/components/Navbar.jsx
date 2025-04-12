@@ -13,7 +13,7 @@ const Navbar = () => {
     <nav
       className="
       fixed top-0 left-0 right-0 z-30 py-2
-     bg-transparent
+     bg-transparent backdrop-blur-2xl
     "
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -21,13 +21,8 @@ const Navbar = () => {
           {/* Logo et nom */}
           <div className="flex items-center">
             <div className="flex-shrink-0 flex items-center">
-              <div className="w-8 h-8 rounded-lg bg-gray-900 dark:bg-white flex items-center justify-center">
-                <span className="text-white dark:text-gray-900 font-bold text-sm">
-                  L
-                </span>
-              </div>
               <span className="ml-3 text-xl font-semibold text-gray-900 dark:text-white">
-                Logo
+                Reboot
               </span>
             </div>
           </div>

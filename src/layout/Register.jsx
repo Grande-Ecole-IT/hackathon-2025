@@ -1,20 +1,14 @@
-/* eslint-disable no-unused-vars */
 import { Eye, EyeOff, Lock, Mail, User } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router";
-import Button from "../components/Button";
-import { useAuth } from "../hooks/useAuth";
 
-const Register = () => {
+const RegisterForm = () => {
   const [formData, setFormData] = useState({
     username: "",
     email: "",
     password: "",
   });
   const [showPassword, setShowPassword] = useState(false);
-  const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const { register } = useAuth();
 
   const handleChange = (e) => {
     setFormData({
@@ -23,98 +17,107 @@ const Register = () => {
     });
   };
 
-  const togglePasswordVisibility = () => {
-    setShowPassword(!showPassword);
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    try {
-      await register(formData);
-    } catch (error) {
-      setError(error.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   return (
-    <div className="w-full max-w-sm bg-white dark:bg-gray-800 rounded-xl p-8 shadow-lg dark:shadow-gray-900 border border-gray-200 dark:border-gray-700">
-      <h2 className="text-2xl font-bold text-center mb-6 text-gray-800 dark:text-white">
-        Inscription
-      </h2>
+    <div className="w-full bg-white/80 backdrop-blur-sm rounded-2xl p-8 shadow-lg border border-blue-100/50">
+      <div className="text-center mb-8">
+        <h2 className="text-3xl font-bold text-gray-800 mb-2">
+          Create Account
+        </h2>
+        <p className="text-gray-500">Get started with your free account</p>
+      </div>
 
-      <form onSubmit={handleSubmit}>
-        <div className="mb-4">
-          <div className="flex items-center px-4 py-3 rounded-lg bg-gray-50 dark:bg-gray-700 shadow-inner border border-gray-200 dark:border-gray-600">
-            <User className="text-gray-500 dark:text-gray-400 mr-3 w-5 h-5" />
+      <form className="space-y-6">
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Full Name
+          </label>
+          <div className="relative">
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <User className="h-5 w-5 text-gray-400" />
+            </div>
             <input
               type="text"
               name="username"
-              placeholder="Nom complet"
+              className="block w-full pl-10 pr-3 py-3 rounded-lg bg-white border border-gray-200 focus:border-violet-500 focus:ring-1 focus:ring-violet-200 outline-none transition"
+              placeholder="John Doe"
               value={formData.username}
               onChange={handleChange}
-              className="w-full bg-transparent outline-none text-gray-700 dark:text-gray-200 placeholder-gray-400"
-              required
             />
           </div>
         </div>
 
-        <div className="mb-4">
-          <div className="flex items-center px-4 py-3 rounded-lg bg-gray-50 dark:bg-gray-700 shadow-inner border border-gray-200 dark:border-gray-600">
-            <Mail className="text-gray-500 dark:text-gray-400 mr-3 w-5 h-5" />
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Email
+          </label>
+          <div className="relative">
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <Mail className="h-5 w-5 text-gray-400" />
+            </div>
             <input
               type="email"
               name="email"
-              placeholder="Email"
+              className="block w-full pl-10 pr-3 py-3 rounded-lg bg-white border border-gray-200 focus:border-violet-500 focus:ring-1 focus:ring-violet-200 outline-none transition"
+              placeholder="your@email.com"
               value={formData.email}
               onChange={handleChange}
-              className="w-full bg-transparent outline-none text-gray-700 dark:text-gray-200 placeholder-gray-400"
-              required
             />
           </div>
         </div>
 
-        <div className="mb-6">
-          <div className="flex items-center px-4 py-3 rounded-lg bg-gray-50 dark:bg-gray-700 shadow-inner border border-gray-200 dark:border-gray-600">
-            <Lock className="text-gray-500 dark:text-gray-400 mr-3 w-5 h-5" />
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Password
+          </label>
+          <div className="relative">
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <Lock className="h-5 w-5 text-gray-400" />
+            </div>
             <input
               type={showPassword ? "text" : "password"}
               name="password"
-              placeholder="Mot de passe"
+              className="block w-full pl-10 pr-10 py-3 rounded-lg bg-white border border-gray-200 focus:border-violet-500 focus:ring-1 focus:ring-violet-200 outline-none transition"
+              placeholder="••••••••"
               value={formData.password}
               onChange={handleChange}
-              className="w-full bg-transparent outline-none text-gray-700 dark:text-gray-200 placeholder-gray-400"
-              required
             />
             <button
               type="button"
-              onClick={togglePasswordVisibility}
-              className="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
+              className="absolute inset-y-0 right-0 pr-3 flex items-center"
+              onClick={() => setShowPassword(!showPassword)}
             >
               {showPassword ? (
-                <EyeOff className="w-5 h-5" />
+                <EyeOff className="h-5 w-5 text-gray-400 hover:text-gray-500" />
               ) : (
-                <Eye className="w-5 h-5" />
+                <Eye className="h-5 w-5 text-gray-400 hover:text-gray-500" />
               )}
             </button>
           </div>
         </div>
 
-        <Button type="submit" className="w-full" color="dark">
-          <span>S'inscrire</span>
-        </Button>
-
-        <p className="text-center mt-4 text-sm text-gray-500 dark:text-gray-400">
-          Déjà un compte ?{" "}
-          <button type="button" className="text-blue-500 hover:underline">
-            <Link to="/login">Se connecter</Link>
+        <div>
+          <button
+            type="submit"
+            className="w-full py-3 px-4 border border-transparent rounded-lg shadow-sm text-white bg-gradient-to-r from-violet-500 to-blue-500 hover:from-violet-600 hover:to-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-violet-500 transition"
+          >
+            Create Account
           </button>
-        </p>
+        </div>
       </form>
+
+      <div className="mt-6">
+        <div className="mt-6 text-center text-sm text-gray-600">
+          Already have an account?{" "}
+          <Link
+            to="/login"
+            className="font-medium text-violet-600 hover:text-violet-500"
+          >
+            Sign in
+          </Link>
+        </div>
+      </div>
     </div>
   );
 };
 
-export default Register;
+export default RegisterForm;
