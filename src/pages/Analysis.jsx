@@ -1,104 +1,78 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Doughnut } from "react-chartjs-2";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
-import Navbar from "../components/Navbar";
+import { useLocation } from "react-router";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 export default function CVAnalysisDashboard() {
   const [activeSection, setActiveSection] = useState(null);
-  const cvImage = "/cv.png"; // Chemin vers l'image du CV
+  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPageAxe, setCurrentPageAxe] = useState(1);
+  const skillsPerPage = 4;
+  const axesToImprovePerPage = 2;
+  const location = useLocation();
+  const { data, file } = location.state || {};
+  const [fileUrl, setFileUrl] = useState("");
 
-  // Données d'exemple
-  const data = {
-    globalScore: {
-      score: 72,
-      label: "Bon potentiel",
-      description: "Votre profil présente de bonnes perspectives face à l'automatisation par l'IA.",
-      details: [
-        { label: "Adaptabilité", value: "Élevée", icon: "🔄" },
-        { label: "Potentiel évolutif", value: "Fort", icon: "📈" },
-        { label: "Résilience IA", value: "72/100", icon: "🤖" }
-      ]
-    },
-    skills: [
-      { 
-        name: "Développement", 
-        score: 85, 
-        status: "Fort",
-        details: {
-          niveau: "Avancé",
-          projets: "15+ projets réalisés",
-          technologies: "React, Node.js, Python",
-          recommandation: "Approfondir l'architecture cloud"
-        }
-      },
-      { 
-        name: "Analyse", 
-        score: 68, 
-        status: "Moyen",
-        details: {
-          niveau: "Intermédiaire",
-          projets: "Analyse de données complexes",
-          technologies: "SQL, Tableau, Pandas",
-          recommandation: "Certification en Data Science"
-        }
-      },
-      { 
-        name: "Gestion de projet", 
-        score: 73, 
-        status: "Bon",
-        details: {
-          niveau: "Intermédiaire+",
-          projets: "5 projets menés",
-          methodologies: "Agile, Scrum",
-          recommandation: "Formation PMP"
-        }
-      },
-      { 
-        name: "UI/UX", 
-        score: 62, 
-        status: "Moyen",
-        details: {
-          niveau: "Intermédiaire",
-          outils: "Figma, Adobe XD",
-          projets: "3 designs systèmes",
-          recommandation: "Cours avancé en design d'interaction"
-        }
-      },
-    ],
-    improvementAreas: [
-      { 
-        name: "Intelligence émotionnelle", 
-        reason: "Essentielle pour le leadership",
-        resources: ["Formation en management", "Livre: Emotional Intelligence 2.0"]
-      },
-      { 
-        name: "Analyse de données IA", 
-        reason: "Compétence clé pour l'avenir",
-        resources: ["Cours: Machine Learning basics", "Certification Google Analytics"]
-      },
-    ],
-    comparison: {
-      text: "Meilleur que 65% des profils similaires",
-      percentile: 65,
-      averageScore: 58
+  console.log(data)
+
+  useEffect(() => {
+    if (file) {
+      const url = URL.createObjectURL(file);
+      setFileUrl(url);
+
+      // Nettoyage mémoire à la fermeture
+      return () => URL.revokeObjectURL(url);
     }
-  };
+  }, [file]);
 
+  
+  // Pagination des compétences
+  const indexOfLastSkill = currentPage * skillsPerPage;
+  const indexOfFirstSkill = indexOfLastSkill - skillsPerPage;
+  const currentSkills = data?.hard_skills?.slice(indexOfFirstSkill, indexOfLastSkill) || [];
+  const totalPages = Math.ceil((data?.hard_skills?.length || 0) / skillsPerPage);
+
+  
+  // Pagination des axes d'ameliorations
+  const indexOfLastAxes = currentPageAxe * axesToImprovePerPage;
+  const indexOfFirstAxes = indexOfLastAxes - axesToImprovePerPage;
+  const currentAxes = data?.improvement_areas?.slice(indexOfFirstAxes, indexOfLastAxes) || [];
+  const totalPagesAxes = Math.ceil((data?.improvement_areas?.length || 0) / axesToImprovePerPage);
+
+  // Formatage des données pour le graphique
   const chartData = {
     labels: ["Score", ""],
-    datasets: [{
-      data: [data.globalScore.score, 100 - data.globalScore.score],
-      backgroundColor: ["#EF4444", "#F3F4F6"], // Rouge pour le score, gris clair pour le reste
-      borderWidth: 0,
-    }]
+    datasets: [
+      {
+        data: [
+          data?.global_evaluation.score,
+          100 - data?.global_evaluation.score,
+        ],
+        backgroundColor: ["#EF4444", "#F3F4F6"],
+        borderWidth: 0,
+      },
+    ],
+  };
+
+  // Fonction pour déterminer la couleur en fonction du niveau de risque
+  const getRiskColor = (riskLevel) => {
+    switch (riskLevel) {
+      case "Faible":
+        return "bg-green-100 text-green-800";
+      case "Moyen":
+        return "bg-yellow-100 text-yellow-800";
+      case "Élevé":
+        return "bg-red-100 text-red-800";
+      default:
+        return "bg-gray-100 text-gray-800";
+    }
   };
 
   return (
     <div className="min-h-screen bg-gray-100 p-6">
-      <Navbar />
-      <div className="mt-10">
+      <div className="">
         <header className="mb-8 text-center">
           <h1 className="text-3xl font-bold text-gray-800">
             Analyse de Compétences
@@ -120,11 +94,13 @@ export default function CVAnalysisDashboard() {
               </h2>
             </div>
             <div className="flex-1 overflow-auto p-2">
-              <img
-                src={cvImage}
-                alt="CV analysé"
-                className="w-full h-auto object-contain rounded-lg shadow-sm"
-              />
+              {file && file.type.startsWith("image/") && (
+                <img
+                  src={fileUrl}
+                  alt="Aperçu du CV"
+                  className="w-full max-w-[794px] max-h-[1123px] border shadow rounded"
+                />
+              )}
             </div>
           </div>
 
@@ -136,11 +112,11 @@ export default function CVAnalysisDashboard() {
                   <span className="bg-gray-200 text-gray-700 p-2 rounded-lg mr-3">
                     🛠️
                   </span>
-                  Analyse des Compétences Techniques
+                  Compétences Techniques
                 </h2>
               </div>
               <div className="p-4 grid grid-cols-1 md:grid-cols-2 gap-4">
-                {data.skills.map((skill, index) => (
+                {currentSkills.map((skill, index) => (
                   <div
                     key={index}
                     className={`rounded-lg border p-4 transition-all ${
@@ -148,18 +124,28 @@ export default function CVAnalysisDashboard() {
                         ? "border-gray-400 bg-gray-100 shadow-inner"
                         : "border-gray-300 hover:border-gray-400 bg-white"
                     }`}
-                    onClick={() => setActiveSection(activeSection === `skill-${index}` ? null : `skill-${index}`)}
+                    onClick={() =>
+                      setActiveSection(
+                        activeSection === `skill-${index}`
+                          ? null
+                          : `skill-${index}`
+                      )
+                    }
                   >
                     <div className="flex justify-between items-start">
                       <div>
-                        <h3 className="font-medium text-gray-800 text-lg">{skill.name}</h3>
+                        <h3 className="font-medium text-gray-800 text-lg">
+                          {skill.name}
+                        </h3>
                         <div className="flex items-center mt-2">
                           <div className="w-32 bg-gray-300 rounded-full h-2.5 mr-3">
                             <div
                               className={`h-2.5 rounded-full ${
-                                skill.score > 80 ? "bg-gray-800" :
-                                skill.score > 60 ? "bg-gray-600" :
-                                "bg-gray-400"
+                                skill.score > 80
+                                  ? "bg-gray-800"
+                                  : skill.score > 60
+                                  ? "bg-gray-600"
+                                  : "bg-gray-400"
                               }`}
                               style={{ width: `${skill.score}%` }}
                             ></div>
@@ -169,40 +155,57 @@ export default function CVAnalysisDashboard() {
                           </span>
                         </div>
                       </div>
-                      <span className={`px-3 py-1 rounded-full text-xs font-medium ${
-                        skill.score > 80 ? "bg-gray-800 text-white" :
-                        skill.score > 60 ? "bg-gray-600 text-white" :
-                        "bg-gray-400 text-gray-800"
-                      }`}>
-                        {skill.status}
+                      <span
+                        className={`px-3 py-1 rounded-full text-xs font-medium ${getRiskColor(
+                          skill.risk_level
+                        )}`}
+                      >
+                        {skill.risk_level}
                       </span>
                     </div>
 
                     {activeSection === `skill-${index}` && (
                       <div className="mt-4 pt-4 border-t border-gray-300">
-                        <div className="grid grid-cols-2 gap-4 text-sm">
-                          <div>
-                            <p className="text-gray-600 font-medium">Niveau</p>
-                            <p className="text-gray-800">{skill.details.niveau}</p>
-                          </div>
-                          <div>
-                            <p className="text-gray-600 font-medium">Expérience</p>
-                            <p className="text-gray-800">{skill.details.projets}</p>
-                          </div>
-                          <div>
-                            <p className="text-gray-600 font-medium">Technologies</p>
-                            <p className="text-gray-800">{skill.details.technologies || skill.details.outils || skill.details.methodologies}</p>
-                          </div>
-                          <div>
-                            <p className="text-gray-600 font-medium">Recommandation</p>
-                            <p className="text-gray-700">{skill.details.recommandation}</p>
-                          </div>
-                        </div>
+                        <p className="text-gray-600">{skill.description}</p>
                       </div>
                     )}
                   </div>
                 ))}
               </div>
+              {/* Pagination */}
+              {totalPages > 1 && (
+                <div className="px-4 pb-4 flex justify-between items-center">
+                  <button
+                    onClick={() =>
+                      setCurrentPage((prev) => Math.max(prev - 1, 1))
+                    }
+                    disabled={currentPage === 1}
+                    className={`px-4 py-2 rounded-md ${
+                      currentPage === 1
+                        ? "bg-gray-200 text-gray-500 cursor-not-allowed"
+                        : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                    }`}
+                  >
+                    Précédent
+                  </button>
+                  <span className="text-sm text-gray-600">
+                    Page {currentPage} sur {totalPages}
+                  </span>
+                  <button
+                    onClick={() =>
+                      setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+                    }
+                    disabled={currentPage === totalPages}
+                    className={`px-4 py-2 rounded-md ${
+                      currentPage === totalPages
+                        ? "bg-gray-200 text-gray-500 cursor-not-allowed"
+                        : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                    }`}
+                  >
+                    Suivant
+                  </button>
+                </div>
+              )}
             </div>
 
             <div className="bg-white rounded-xl shadow-sm border border-gray-300 overflow-hidden">
@@ -215,28 +218,83 @@ export default function CVAnalysisDashboard() {
                 </h2>
               </div>
               <div className="p-4 space-y-4">
-                {data.improvementAreas.map((area, index) => (
-                  <div key={index} className="p-4 bg-gray-50 rounded-lg border border-gray-200">
+                {currentAxes.map((area, index) => (
+                  <div
+                    key={index}
+                    className="p-4 bg-gray-50 rounded-lg border border-gray-200"
+                  >
                     <h3 className="font-medium text-gray-800 flex items-center">
                       <span className="bg-gray-200 text-gray-700 p-1.5 rounded-lg mr-2">
                         {index + 1}
                       </span>
                       {area.name}
                     </h3>
-                    <p className="text-sm text-gray-600 mt-1">{area.reason}</p>
+                    <p className="text-sm text-gray-600 mt-1">
+                      Priorité: {area.reason}/5
+                    </p>
                     <div className="mt-3">
-                      <p className="text-xs font-medium text-gray-500 mb-1">Ressources suggérées:</p>
-                      <div className="flex flex-wrap gap-2">
+                      <p className="text-xs font-medium text-gray-500 mb-1">
+                        Ressources suggérées:
+                      </p>
+                      <div className="space-y-2">
                         {area.resources.map((resource, i) => (
-                          <span key={i} className="text-xs bg-white px-3 py-1 rounded-full border border-gray-300">
-                            {resource}
-                          </span>
+                          <div
+                            key={i}
+                            className="text-sm bg-white p-3 rounded-lg border border-gray-300"
+                          >
+                            <a
+                              href={resource.url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-blue-600 hover:underline"
+                            >
+                              {resource.title || resource.name}
+                            </a>
+                            <p className="text-xs text-gray-500 mt-1">
+                              {resource.author || resource.provider}
+                            </p>
+                          </div>
                         ))}
                       </div>
                     </div>
                   </div>
                 ))}
               </div>
+              
+              {/* Pagination */}
+              {totalPagesAxes > 1 && (
+                <div className="px-4 pb-4 flex justify-between items-center">
+                  <button
+                    onClick={() =>
+                      setCurrentPageAxe((prev) => Math.max(prev - 1, 1))
+                    }
+                    disabled={currentPageAxe === 1}
+                    className={`px-4 py-2 rounded-md ${
+                      currentPageAxe === 1
+                        ? "bg-gray-200 text-gray-500 cursor-not-allowed"
+                        : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                    }`}
+                  >
+                    Précédent
+                  </button>
+                  <span className="text-sm text-gray-600">
+                    Page {currentPageAxe} sur {totalPagesAxes}
+                  </span>
+                  <button
+                    onClick={() =>
+                      setCurrentPageAxe((prev) => Math.min(prev + 1, totalPagesAxes))
+                    }
+                    disabled={currentPageAxe === totalPagesAxes}
+                    className={`px-4 py-2 rounded-md ${
+                      currentPageAxe === totalPagesAxes
+                        ? "bg-gray-200 text-gray-500 cursor-not-allowed"
+                        : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                    }`}
+                  >
+                    Suivant
+                  </button>
+                </div>
+              )}
             </div>
           </div>
 
@@ -248,7 +306,7 @@ export default function CVAnalysisDashboard() {
                   <span className="bg-gray-200 text-gray-700 p-2 rounded-lg mr-3">
                     📊
                   </span>
-                  Score Global
+                  Évaluation Globale
                 </h2>
               </div>
               <div className="p-4 flex flex-col items-center">
@@ -262,28 +320,37 @@ export default function CVAnalysisDashboard() {
                   />
                   <div className="absolute inset-0 flex flex-col items-center justify-center">
                     <span className="text-4xl font-bold text-gray-800">
-                      {data.globalScore.score}
+                      {data.global_evaluation.score}
                     </span>
                     <span className="text-sm text-gray-500">/100</span>
-                    <span className={`mt-2 px-3 py-1 rounded-full text-sm font-medium ${
-                      data.globalScore.score > 80 ? "bg-gray-800 text-white" :
-                      data.globalScore.score > 60 ? "bg-gray-600 text-white" :
-                      "bg-gray-400 text-gray-800"
-                    }`}>
-                      {data.globalScore.label}
+                    <span
+                      className={`mt-2 px-3 py-1 rounded-full text-sm font-medium ${
+                        data.global_evaluation.score > 80
+                          ? "bg-gray-800 text-white"
+                          : data.global_evaluation.score > 60
+                          ? "bg-gray-600 text-white"
+                          : "bg-gray-400 text-gray-800"
+                      }`}
+                    >
+                      {data.global_evaluation.evaluation}
                     </span>
                   </div>
                 </div>
                 <p className="text-gray-600 text-center mb-4">
-                  {data.globalScore.description}
+                  {data.global_evaluation.description}
                 </p>
                 <div className="w-full space-y-3">
-                  {data.globalScore.details.map((detail, index) => (
-                    <div key={index} className="flex items-center p-3 bg-gray-50 rounded-lg">
+                  {data.global_evaluation.details.map((detail, index) => (
+                    <div
+                      key={index}
+                      className="flex items-center p-3 bg-gray-50 rounded-lg"
+                    >
                       <span className="text-xl mr-3">{detail.icon}</span>
                       <div>
                         <p className="text-xs text-gray-600">{detail.label}</p>
-                        <p className="font-medium text-gray-800">{detail.value}</p>
+                        <p className="font-medium text-gray-800">
+                          {detail.value}
+                        </p>
                       </div>
                     </div>
                   ))}
