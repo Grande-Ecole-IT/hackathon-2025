@@ -1,6 +1,7 @@
 import { File, FileText, Loader, Upload, X } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import Button from "./Button";
+import { useNavigate } from "react-router";
 
 
 const Modal = ({ isOpen, onClose }) => {
@@ -10,6 +11,7 @@ const Modal = ({ isOpen, onClose }) => {
   const [error, setError] = useState(null);
   const modalRef = useRef(null);
   const endpoint = "https://hackathon-2025-back.onrender.com/resume-risk";
+  const navigate = useNavigate()
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
@@ -47,7 +49,8 @@ const Modal = ({ isOpen, onClose }) => {
     }
     const data = await response.json();
     console.log("Réponse du serveur:", data);
-    setLoading(false);                                
+    navigate("/analysis", { state: { data, file: selectedFile } });
+    setLoading(false);
   };
 
   const handleClickOutside = useCallback((event) => {
