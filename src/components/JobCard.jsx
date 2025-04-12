@@ -33,7 +33,7 @@ const JobCard = ({ job }) => {
 
         <div className="mt-4 pt-4 border-t border-gray-100">
           <h4 className="text-sm font-medium text-gray-900 mb-2">
-            Key Skills:
+            Compétences clés:
           </h4>
           <div className="flex flex-wrap gap-2">
             {job.skills.map((skill, i) => (
@@ -99,7 +99,7 @@ const JobCard = ({ job }) => {
 
             <div className="mb-8">
               <h3 className="text-lg font-medium text-gray-900 mb-3">
-                Required Skills:
+                Compétences demandés:
               </h3>
               <div className="flex flex-wrap gap-3">
                 {job.skills.map((skill, i) => (

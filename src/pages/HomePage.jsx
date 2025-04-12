@@ -1,14 +1,14 @@
 /* eslint-disable no-unused-vars */
 import { motion } from "framer-motion";
+import { MessageCircle, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import CardSkeleton from "../components/CardSkeleton";
 import DashboardCards from "../components/DashboardCards";
 import FilterSidebar from "../components/FilterSidebar";
+import FloatingChatBot from "../components/FloatingChatBot";
 import JobList from "../components/JobList";
 import Modal from "../components/Modal";
 import Navbar from "../components/Navbar";
-import { MessageCircle, X, Send } from "lucide-react";
-import FloatingChatBot from "../components/FloatingChatBot";
 
 const HomePage = () => {
   const [jobs, setJobs] = useState([]);
@@ -177,7 +177,7 @@ const HomePage = () => {
         </div>
         {showScrollTop && (
           <motion.div
-            className="fixed inset-x-0 bottom-12 flex justify-center z-50 pointer-events-none"
+            className="fixed inset-x-0 bottom-4 flex justify-center z-50 pointer-events-none"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 20 }}
@@ -187,7 +187,7 @@ const HomePage = () => {
               onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
               className="pointer-events-auto bg-gradient-to-r from-blue-500 to-violet-500 backdrop-blur text-white px-6 py-3 rounded-full shadow-xl hover:from-blue-600 hover:to-violet-600 transition-all"
             >
-              Retour en haut
+              Up
             </button>
           </motion.div>
         )}
@@ -200,7 +200,7 @@ const HomePage = () => {
         className="fixed bottom-6 right-6 z-50 bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-4 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110"
         style={{
           position: "fixed",
-          right: "24px", 
+          right: "24px",
           bottom: "24px",
         }}
         aria-label="Ouvrir le chat"

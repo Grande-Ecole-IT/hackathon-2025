@@ -1,11 +1,13 @@
 /* eslint-disable no-unused-vars */
 import { OrbitControls } from "@react-three/drei";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { motion } from "framer-motion";
-import { Suspense, useRef } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import { useRef, useState } from "react";
 import { Link } from "react-router";
+import LoginForm from "./Login";
+import RegisterForm from "./Register";
 
-const AnimatedBackground = () => {
+const FondAnime = () => {
   return (
     <div className="fixed inset-0 z-0 overflow-hidden bg-gradient-to-br from-blue-50 to-violet-50">
       {/* Grille animée */}
@@ -54,7 +56,7 @@ const AnimatedBackground = () => {
   );
 };
 
-const FloatingCore = () => {
+const CoeurFlottant = () => {
   const mesh = useRef();
 
   useFrame(() => {
@@ -78,10 +80,10 @@ const FloatingCore = () => {
   );
 };
 
-const Navbar = () => {
+const BarreNavigation = ({ afficherConnexion, afficherInscription }) => {
   return (
     <motion.nav
-      className="fixed top-0 left-0 right-0 z-50  backdrop-blur-md border-b border-gray-200"
+      className="fixed top-0 left-0 right-0 z-50 backdrop-blur-md border-b border-gray-200"
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       transition={{ duration: 0.5 }}
@@ -95,41 +97,68 @@ const Navbar = () => {
         </Link>
 
         <div className="flex gap-4">
-          <Link
-            to="/login"
+          <button
+            onClick={afficherConnexion}
             className="px-6 py-2 text-gray-700 hover:text-violet-600 transition-colors"
           >
-            Login
-          </Link>
-          <Link
-            to="/register"
+            Connexion
+          </button>
+          <button
+            onClick={afficherInscription}
             className="px-6 py-2 bg-gradient-to-r from-blue-400 to-violet-500 text-white rounded-lg hover:from-blue-500 hover:to-violet-600 transition-all shadow-md"
           >
-            Register
-          </Link>
+            Inscription
+          </button>
         </div>
       </div>
     </motion.nav>
   );
 };
 
-export default function Home() {
+export default function Accueil() {
+  const [afficherConnexion, setAfficherConnexion] = useState(false);
+  const [afficherInscription, setAfficherInscription] = useState(false);
+
   return (
     <div className="min-h-screen text-gray-800 overflow-x-hidden">
-      {/* Background animé */}
-      <AnimatedBackground />
+      <FondAnime />
 
-      {/* Navbar */}
-      <Navbar />
+      <BarreNavigation
+        afficherConnexion={() => setAfficherConnexion(true)}
+        afficherInscription={() => setAfficherInscription(true)}
+      />
 
-      {/* Contenu */}
+      <AnimatePresence>
+        {afficherConnexion && (
+          <LoginForm
+            onClose={() => setAfficherConnexion(false)}
+            showInscription={() => {
+              setAfficherConnexion(false);
+              setAfficherInscription(true);
+            }}
+          />
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {afficherInscription && (
+          <RegisterForm
+            onClose={() => setAfficherInscription(false)}
+            showConnexion={() => {
+              setAfficherInscription(false);
+              setAfficherConnexion(true);
+            }}
+          />
+        )}
+      </AnimatePresence>
+
+      {/* Contenu principal */}
       <div className="relative z-10 container mx-auto px-4 pt-24 pb-12">
-        {/* Hero Section */}
+        {/* Section Hero */}
         <motion.header
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
-          g
           className="text-center mb-24 pt-12"
         >
           <motion.h1
@@ -139,7 +168,7 @@ export default function Home() {
             transition={{ delay: 0.3 }}
           >
             <span className="text-gray-800 font-extrabold">
-              Reboot your potential
+              Libérez votre potentiel
             </span>
           </motion.h1>
 
@@ -149,8 +178,8 @@ export default function Home() {
             animate={{ opacity: 1 }}
             transition={{ delay: 0.6 }}
           >
-            Transform AI challenges into opportunities with our intelligent
-            career platform
+            Transformez les défis de l'IA en opportunités avec notre plateforme
+            intelligente
           </motion.p>
 
           <motion.div
@@ -164,12 +193,12 @@ export default function Home() {
               whileHover={{ y: -3, scale: 1.03 }}
               whileTap={{ scale: 0.98 }}
             >
-              Start Your Journey
+              Commencez votre voyage
             </motion.button>
           </motion.div>
         </motion.header>
 
-        {/* Features Section */}
+        {/* Section Fonctionnalités */}
         <motion.div
           className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-6xl mx-auto mb-32"
           initial={{ opacity: 0 }}
@@ -179,10 +208,10 @@ export default function Home() {
         >
           {[
             {
-              title: "Resume Analysis",
+              titre: "Analyse de CV",
               description:
-                "AI-powered insights to optimize your resume for today's job market.",
-              icon: (
+                "Notre IA analyse et optimise votre CV pour le marché actuel.",
+              icone: (
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   className="h-8 w-8 text-blue-600"
@@ -198,13 +227,13 @@ export default function Home() {
                   />
                 </svg>
               ),
-              color: "blue",
+              couleur: "blue",
             },
             {
-              title: "Business Ideas",
+              titre: "Idées Business",
               description:
-                "Discover opportunities that leverage AI as an advantage.",
-              icon: (
+                "Découvrez des opportunités qui tirent parti de l'IA.",
+              icone: (
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   className="h-8 w-8 text-violet-600"
@@ -220,23 +249,23 @@ export default function Home() {
                   />
                 </svg>
               ),
-              color: "violet",
+              couleur: "violet",
             },
           ].map((feature, i) => (
             <motion.div
               key={i}
-              className={`bg-white/80 backdrop-blur-sm rounded-3xl p-8 border-2 border-${feature.color}-100/60 hover:border-${feature.color}-200/80 transition-all shadow-sm`}
+              className={`bg-white/80 backdrop-blur-sm rounded-3xl p-8 border-2 border-${feature.couleur}-100/60 hover:border-${feature.couleur}-200/80 transition-all shadow-sm`}
               whileHover={{ y: -5 }}
             >
               <div className="flex items-start mb-6">
                 <div
-                  className={`p-3 rounded-lg bg-${feature.color}-100/60 mr-4 border-2 border-${feature.color}-200/50`}
+                  className={`p-3 rounded-lg bg-${feature.couleur}-100/60 mr-4 border-2 border-${feature.couleur}-200/50`}
                 >
-                  {feature.icon}
+                  {feature.icone}
                 </div>
                 <div>
                   <h3 className="text-2xl font-bold text-gray-800 mb-2">
-                    {feature.title}
+                    {feature.titre}
                   </h3>
                   <p className="text-gray-600 leading-relaxed">
                     {feature.description}
@@ -245,21 +274,21 @@ export default function Home() {
               </div>
               <div className="mt-6">
                 <div
-                  className={`h-px bg-gradient-to-r from-transparent via-${feature.color}-200/50 to-transparent mb-6`}
+                  className={`h-px bg-gradient-to-r from-transparent via-${feature.couleur}-200/50 to-transparent mb-6`}
                 ></div>
                 <ul className="space-y-3">
-                  {feature.title === "Resume Analysis"
+                  {feature.titre === "Analyse de CV"
                     ? [
-                        "Strengths identification",
-                        "Weakness detection",
-                        "ATS optimization",
-                        "Personalized suggestions",
+                        "Identification des points forts",
+                        "Détection des faiblesses",
+                        "Optimisation pour les ATS",
+                        "Suggestions personnalisées",
                       ]
                     : [
-                        "Market trend analysis",
-                        "Personalized concepts",
-                        "Implementation roadmap",
-                        "Risk assessment",
+                        "Analyse des tendances",
+                        "Concepts personnalisés",
+                        "Feuille de route",
+                        "Évaluation des risques",
                       ].map((item, j) => (
                         <motion.li
                           key={j}
@@ -267,7 +296,7 @@ export default function Home() {
                           whileHover={{ x: 3 }}
                         >
                           <span
-                            className={`w-2 h-2 rounded-full bg-${feature.color}-400 mr-3 mt-2`}
+                            className={`w-2 h-2 rounded-full bg-${feature.couleur}-400 mr-3 mt-2`}
                           ></span>
                           <span>{item}</span>
                         </motion.li>
@@ -278,7 +307,7 @@ export default function Home() {
           ))}
         </motion.div>
 
-        {/* 3D Showcase */}
+        {/* Section 3D */}
         <motion.div
           className="relative h-96 rounded-3xl overflow-hidden my-32 bg-white/80 backdrop-blur-sm border-2 border-blue-100/60 shadow-md"
           initial={{ opacity: 0 }}
@@ -289,9 +318,7 @@ export default function Home() {
           <Canvas camera={{ position: [0, 0, 5], fov: 50 }}>
             <ambientLight intensity={0.8} color="#a5b4fc" />
             <pointLight position={[3, 3, 3]} intensity={0.8} color="#a5b4fc" />
-            <Suspense fallback={null}>
-              <FloatingCore />
-            </Suspense>
+            <CoeurFlottant />
             <OrbitControls
               enableZoom={false}
               autoRotate
@@ -307,16 +334,17 @@ export default function Home() {
               transition={{ delay: 0.8 }}
             >
               <h3 className="text-3xl font-bold text-gray-800 mb-4">
-                AI-Powered Future
+                Futur propulsé par l'IA
               </h3>
               <p className="text-gray-600 max-w-md mx-auto">
-                Harness the power of AI to enhance your career potential
+                Exploitez la puissance de l'IA pour booster votre potentiel
+                professionnel
               </p>
             </motion.div>
           </div>
         </motion.div>
 
-        {/* Final CTA */}
+        {/* CTA Final */}
         <motion.div
           className="text-center max-w-3xl mx-auto my-32"
           initial={{ opacity: 0 }}
@@ -329,13 +357,13 @@ export default function Home() {
             whileHover={{ scale: 1.01 }}
           >
             <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-violet-500">
-              Ready to begin
+              Prêt à commencer
             </span>{" "}
-            <span className="text-gray-800">your transformation?</span>
+            <span className="text-gray-800">votre transformation ?</span>
           </motion.h2>
           <p className="text-xl text-gray-600 mb-12 leading-relaxed">
-            Join professionals who are already leveraging AI to accelerate their
-            careers.
+            Rejoignez les professionnels qui utilisent déjà l'IA pour accélérer
+            leur carrière.
           </p>
           <motion.div className="flex flex-col sm:flex-row justify-center gap-4">
             <motion.button
@@ -343,19 +371,19 @@ export default function Home() {
               whileHover={{ y: -3, scale: 1.03 }}
               whileTap={{ scale: 0.98 }}
             >
-              Get Started
+              Commencer
             </motion.button>
             <motion.button
               className="px-8 py-3.5 bg-white/80 border-2 border-blue-200 rounded-lg text-lg font-medium text-gray-700 hover:bg-white transition-all shadow-sm"
               whileHover={{ y: -3, scale: 1.03 }}
               whileTap={{ scale: 0.98 }}
             >
-              Learn More
+              En savoir plus
             </motion.button>
           </motion.div>
         </motion.div>
 
-        {/* Footer */}
+        {/* Pied de page */}
         <motion.footer
           className="text-center text-gray-500 text-sm mt-32 pb-12"
           initial={{ opacity: 0 }}
@@ -363,7 +391,7 @@ export default function Home() {
           transition={{ delay: 0.5 }}
           viewport={{ once: true }}
         >
-          <p>© {new Date().getFullYear()} REBOOT. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} REBOOT. Tous droits réservés.</p>
         </motion.footer>
       </div>
     </div>

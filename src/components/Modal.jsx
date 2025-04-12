@@ -1,17 +1,17 @@
 import { File, FileText, Loader, Upload, X } from "lucide-react";
-import { useCallback, useEffect, useRef, useState } from "react";
-import Button from "./Button";
+import { useRef, useState } from "react";
 import { useNavigate } from "react-router";
-
+import Button from "./Button";
 
 const Modal = ({ isOpen, onClose }) => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [preview, setPreview] = useState(null);
   const [loading, setLoading] = useState(false);
+  // eslint-disable-next-line no-unused-vars
   const [error, setError] = useState(null);
   const modalRef = useRef(null);
   const endpoint = "https://hackathon-2025-back.onrender.com/resume-risk";
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
@@ -40,8 +40,8 @@ const Modal = ({ isOpen, onClose }) => {
       method: "POST",
       body: formData,
       headers: {
-        "Accept": "application/json",
-        },
+        Accept: "application/json",
+      },
     });
     if (!response.ok) {
       console.error("Erreur lors de l'envoi du fichier:", response.statusText);
@@ -52,26 +52,6 @@ const Modal = ({ isOpen, onClose }) => {
     navigate("/analysis", { state: { data, file: selectedFile } });
     setLoading(false);
   };
-
-  const handleClickOutside = useCallback((event) => {
-    if (modalRef.current && !modalRef.current.contains(event.target)) {
-      onClose();
-    }
-  },[onClose]);
-
-  useEffect(() => {
-    if (isOpen) {
-      document.addEventListener("mousedown", handleClickOutside);
-      document.body.style.overflow = "hidden";
-    } else {
-      document.removeEventListener("mousedown", handleClickOutside);
-      document.body.style.overflow = "unset";
-    }
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-      document.body.style.overflow = "unset";
-    };
-  }, [handleClickOutside, isOpen]);
 
   const renderFilePreview = () => {
     if (selectedFile?.type.match("image.*")) {
@@ -110,7 +90,7 @@ const Modal = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center  backdrop-blur-xl">
+    <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center  backdrop-blur-xl">
       <div
         ref={modalRef}
         className="relative bg-white rounded-lg shadow-xl w-full max-w-xl max-h-[90vh] overflow-hidden flex flex-col"
@@ -169,12 +149,8 @@ const Modal = ({ isOpen, onClose }) => {
             disabled={!selectedFile}
             color="dark"
           >
-          {loading ? (
-            <Loader className="animate-spin"/>
-          ) : null}
-            <span>
-            Diagnostiquer
-            </span>
+            {loading ? <Loader className="animate-spin" /> : null}
+            <span>Diagnostiquer</span>
           </Button>
         </div>
       </div>
