@@ -29,7 +29,7 @@ const JobCard = ({ job }) => {
           </span>
         </div>
 
-        <p className="text-gray-700 mb-4 line-clamp-2">{job.details}</p>
+        <p className="text-gray-700 mb-4 line-clamp-2 text-sm">{job.details}</p>
 
         <div className="mt-4 pt-4 border-t border-gray-100">
           <h4 className="text-sm font-medium text-gray-900 mb-2">

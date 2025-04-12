@@ -1,9 +1,9 @@
+/* eslint-disable no-unused-vars */
 import { OrbitControls } from "@react-three/drei";
 import { Canvas, useFrame } from "@react-three/fiber";
-// eslint-disable-next-line no-unused-vars
 import { motion } from "framer-motion";
 import { Suspense, useRef, useState } from "react";
-import Login from "../layout/Login";
+import Register from "../layout/Register";
 
 const AnimatedTorus = () => {
   const mesh = useRef();
@@ -43,7 +43,7 @@ const AnimatedTorus = () => {
   );
 };
 
-const LoginPage = () => {
+const RegisterPage = () => {
   return (
     <div className="relative w-full h-screen flex overflow-hidden bg-gray-100">
       {/* Colonne gauche avec animation 3D */}
@@ -99,11 +99,11 @@ const LoginPage = () => {
           transition={{ duration: 0.5, delay: 0.2 }}
           className="w-full max-w-sm "
         >
-          <Login />
+          <Register />
         </motion.div>
       </div>
     </div>
   );
 };
 
-export default LoginPage;
+export default RegisterPage;

@@ -1,8 +1,9 @@
+/* eslint-disable no-unused-vars */
 import { Eye, EyeOff, Lock, Mail } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router";
 import Button from "../components/Button";
-import { useAuth } from '../hooks/useAuth';
+import { useAuth } from "../hooks/useAuth";
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -12,7 +13,7 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
-  const {login} = useAuth()
+  const { login } = useAuth();
 
   const handleChange = (e) => {
     setFormData({
@@ -29,13 +30,12 @@ const Login = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      login(formData).then(() =>{
+      login(formData).then(() => {
         // navigation
       });
-    } catch(e){
+    } catch (e) {
       setError(e.message ?? "Une erreur est survenue");
-    }
-    finally{
+    } finally {
       setLoading(false);
     }
   };
@@ -53,6 +53,7 @@ const Login = () => {
             <input
               type="email"
               name="email"
+              id="email"
               placeholder="Email"
               value={formData.email}
               onChange={handleChange}
@@ -68,6 +69,7 @@ const Login = () => {
             <input
               type={showPassword ? "text" : "password"}
               name="password"
+              id="password"
               placeholder="Mot de passe"
               value={formData.password}
               onChange={handleChange}

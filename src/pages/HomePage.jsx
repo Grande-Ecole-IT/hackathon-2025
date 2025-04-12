@@ -1,10 +1,12 @@
+// eslint-disable-next-line no-unused-vars
+import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
+import CardSkeleton from "../components/CardSkeleton";
 import DashboardCards from "../components/DashboardCards";
 import FilterSidebar from "../components/FilterSidebar";
 import JobList from "../components/JobList";
 import Modal from "../components/Modal";
 import Navbar from "../components/Navbar";
-import CardSkeleton from "../components/CardSkeleton";
 
 const HomePage = () => {
   const [jobs, setJobs] = useState([]);
@@ -14,7 +16,18 @@ const HomePage = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [expandedCard, setExpandedCard] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [showScrollTop, setShowScrollTop] = useState(false);
+
   const jobsUri = "https://hackathon-2025-back.onrender.com/job-trend";
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowScrollTop(window.scrollY > 100);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   useEffect(() => {
     const fetchJobs = async () => {
@@ -103,9 +116,9 @@ const HomePage = () => {
 
               {loading && (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-                   <CardSkeleton />
-                   <CardSkeleton />
-                   <CardSkeleton />
+                  <CardSkeleton />
+                  <CardSkeleton />
+                  <CardSkeleton />
                 </div>
               )}
 
@@ -156,6 +169,22 @@ const HomePage = () => {
             </div>
           </div>
         </div>
+        {showScrollTop && (
+          <motion.div
+            className="fixed inset-x-0 bottom-12 flex justify-center z-50 pointer-events-none"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 20 }}
+            transition={{ duration: 0.4 }}
+          >
+            <button
+              onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+              className="pointer-events-auto bg-black/80 backdrop-blur text-white px-6 py-3 rounded-full shadow-xl hover:bg-black transition-all"
+            >
+              Retour en haut
+            </button>
+          </motion.div>
+        )}
       </div>
 
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />

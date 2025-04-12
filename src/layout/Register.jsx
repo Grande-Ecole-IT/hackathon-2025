@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { Eye, EyeOff, Lock, Mail, User } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router";
@@ -32,9 +33,8 @@ const Register = () => {
     try {
       await register(formData);
     } catch (error) {
-      setError(error.message)
-    }
-    finally {
+      setError(error.message);
+    } finally {
       setLoading(false);
     }
   };
