@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import {
   Activity,
   ArrowRight,
@@ -21,8 +22,9 @@ import {
   Users,
   Video,
 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router";
+import { motion } from "framer-motion";
 
 export default function BusinessIdeasPage() {
   return (
@@ -208,82 +210,48 @@ function StepCard({ step, title, desc, link, button, icon }) {
 
 function TabsSection() {
   const [activeTab, setActiveTab] = useState("match");
+  const endpoint = "https://hackathon-2025-back.onrender.com/business-idea";
+  const [loading, setLoading] = useState(true);
+  const [ideas, setIdeas] = useState([]);
+  const [error, setError] = useState(null);
 
-  const ideas = {
-    match: [
-      {
-        title: "Agence de Consulting UX/UI Spécialisée",
-        description:
-          "Créez une agence de conseil en expérience utilisateur dans un secteur spécifique.",
-        matchScore: 92,
-        investmentLevel: "Faible à Moyen",
-        timeToMarket: "1-3 mois",
-        competitionLevel: "Moyenne",
-        skillsRequired: [
-          "Design UX/UI",
-          "Gestion de projet",
-          "Connaissance sectorielle",
-          "Communication client",
-        ],
-        potentialClients: ["Startups", "PME", "Grandes entreprises"],
-      },
-      {
-        title: "Plateforme de Formation en Ligne",
-        description:
-          "Développez une plateforme de cours en ligne pour professionnels en reconversion.",
-        matchScore: 87,
-        investmentLevel: "Moyen",
-        timeToMarket: "3-6 mois",
-        competitionLevel: "Élevée",
-        skillsRequired: [
-          "Expertise technique",
-          "Pédagogie",
-          "Marketing digital",
-          "Production de contenu",
-        ],
-        potentialClients: ["Professionnels", "Étudiants", "Entreprises"],
-      },
-      {
-        title: "Service de Développement d'Applications SaaS",
-        description:
-          "Lancez un service de développement d'applications SaaS pour PME.",
-        matchScore: 85,
-        investmentLevel: "Faible à Moyen",
-        timeToMarket: "1-2 mois",
-        competitionLevel: "Moyenne à Élevée",
-        skillsRequired: [
-          "Développement web/mobile",
-          "Architecture",
-          "Gestion de projet",
-          "Relation client",
-        ],
-        potentialClients: ["Startups", "PME", "Professions libérales"],
-      },
-    ],
-    trending: [
-      {
-        title: "Service de Conseil en IA pour PME",
-        description:
-          "Aidez les PME à intégrer des solutions d'IA adaptées à leurs besoins spécifiques.",
-        matchScore: 78,
-        investmentLevel: "Faible",
-        timeToMarket: "1-2 mois",
-        competitionLevel: "Moyenne",
-        skillsRequired: [
-          "Connaissance de l'IA",
-          "Conseil",
-          "Analyse de besoins",
-          "Gestion de projet",
-        ],
-        potentialClients: ["PME", "Startups", "Professions libérales"],
-      },
-    ],
+
+  const fetchBusinessIdeas = async () => {
+    try {
+      const response = await fetch(endpoint, {
+        method: "POST",
+        body: JSON.stringify({
+          sector: "technology",
+          skills: ["Design UX/UI", "Gestion de projet", "Développement Front-end"],
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      if (!response.ok) {
+        setError("Erreur lors de la récupération des données");
+        return;
+      }
+      const result = await response.json();
+      console.log(result)
+      setIdeas(result);
+    }
+    catch (err) {
+      console.log(err);
+      setError("Erreur réseau");
+    } finally {
+      setLoading(false);
+    }
   };
+  useEffect(() => {
+    fetchBusinessIdeas();
+  }, []);
+
 
   return (
     <div className="mb-8">
       <div className="grid grid-cols-2 mb-4 border rounded overflow-hidden">
-        {["match", "trending"].map((tab) => (
+        {["match", "trend"].map((tab) => (
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
@@ -295,7 +263,7 @@ function TabsSection() {
           >
             {tab === "match"
               ? "Meilleur match"
-              : tab === "trending"
+              : tab === "trend"
               ? "Tendances"
               : "Innovant"}
           </button>
@@ -303,13 +271,26 @@ function TabsSection() {
       </div>
 
       <div className="space-y-6">
-        {ideas[activeTab].map((idea, index) => (
-          <BusinessIdeaCard key={index} {...idea} />
+        {loading ? (
+          <LoadingCard />
+        ) :  
+         ideas[activeTab].map((idea, index) => (
+          <BusinessIdeaCard key={index}
+          title={idea.title}
+          description={idea.description}
+          matchScore={idea.match_score}
+          investmentLevel={idea.investment_level}
+          timeToMarket={idea.time_to_market}
+          competitionLevel={idea.competition_level}
+          skillsRequired={idea.skills_required}
+          potentialClients={idea.potential_clients}
+          />
         ))}
       </div>
     </div>
   );
 }
+
 
 function BusinessIdeaCard({
   title,
@@ -518,4 +499,112 @@ function InfoBlock({ icon, label, value, className = "" }) {
       <p className="font-semibold text-gray-800">{value}</p>
     </div>
   );
+}
+
+
+const LoadingCard = () => {
+  const pulseAnimation = {
+    scale: [1, 1.02, 1],
+    opacity: [0.8, 1, 0.8],
+    transition: {
+      duration: 1.5,
+      repeat: Infinity,
+      ease: "easeInOut"
+    }
+  };
+
+  const shimmerAnimation = {
+    x: ["-100%", "100%"],
+    transition: {
+      duration: 1.5,
+      repeat: Infinity,
+      ease: "easeInOut"
+    }
+  };
+
+  return (
+    <motion.div 
+      className="rounded-lg overflow-hidden shadow-lg bg-white border border-gray-200"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+    >
+      {/* Shimmer overlay */}
+      <div className="relative overflow-hidden">
+        <motion.div
+          className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-transparent via-gray-100 to-transparent"
+          animate={shimmerAnimation}
+        />
+      </div>
+
+      {/* Header */}
+      <motion.div 
+        className="px-6 py-4 bg-gradient-to-r from-purple-50 to-blue-50"
+        animate={pulseAnimation}
+      >
+        <div className="h-8 w-3/4 bg-gray-200 rounded mb-2"></div>
+        <div className="h-6 w-1/2 bg-gray-200 rounded"></div>
+      </motion.div>
+
+      {/* Content */}
+      <div className="px-6 py-4">
+        {/* Description */}
+        <div className="mb-6">
+          <div className="h-5 w-full bg-gray-200 rounded mb-2"></div>
+          <div className="h-5 w-5/6 bg-gray-200 rounded"></div>
+        </div>
+
+        {/* Stats */}
+        <div className="grid grid-cols-3 gap-4 mb-6">
+          {[...Array(3)].map((_, i) => (
+            <motion.div 
+              key={i}
+              className="space-y-2"
+              animate={pulseAnimation}
+              transition={{ ...pulseAnimation.transition, delay: i * 0.1 }}
+            >
+              <div className="h-4 w-3/4 bg-gray-200 rounded mx-auto"></div>
+              <div className="h-6 w-1/2 bg-gray-200 rounded mx-auto"></div>
+            </motion.div>
+          ))}
+        </div>
+
+        {/* Skills */}
+        <div className="mb-6">
+          <div className="h-4 w-1/3 bg-gray-200 rounded mb-3"></div>
+          <div className="flex flex-wrap gap-2">
+            {[...Array(4)].map((_, i) => (
+              <motion.div
+                key={i}
+                className="h-8 w-24 bg-gray-200 rounded-full"
+                animate={pulseAnimation}
+                transition={{ ...pulseAnimation.transition, delay: i * 0.15 }}
+              />
+            ))}
+          </div>
+        </div>
+
+        {/* Clients */}
+        <div className="mb-6">
+          <div className="h-4 w-1/3 bg-gray-200 rounded mb-3"></div>
+          <div className="flex gap-4">
+            {[...Array(3)].map((_, i) => (
+              <motion.div
+                key={i}
+                className="h-6 w-16 bg-gray-200 rounded"
+                animate={pulseAnimation}
+                transition={{ ...pulseAnimation.transition, delay: i * 0.1 }}
+              />
+            ))}
+          </div>
+        </div>
+
+        {/* Button */}
+        <motion.div
+          className="h-10 w-32 bg-gradient-to-r from-purple-400 to-blue-500 rounded-lg mx-auto mt-4"
+          animate={pulseAnimation}
+        />
+      </div>
+    </motion.div>
+  )
 }
