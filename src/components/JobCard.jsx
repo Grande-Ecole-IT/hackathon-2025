@@ -25,7 +25,7 @@ const JobCard = ({ job }) => {
           <Star className="text-yellow-500 w-5 h-5 mr-2" />
           <span className="text-gray-900 font-semibold">
             {job.min_salary.toLocaleString()} -{" "}
-            {job.max_salary.toLocaleString()}
+            {job.max_salary.toLocaleString()} {job.currency}
           </span>
         </div>
 
@@ -87,7 +87,7 @@ const JobCard = ({ job }) => {
               <Star className="text-yellow-500 w-5 h-5 mr-2" />
               <span className="text-lg font-semibold text-gray-900">
                 {job.min_salary.toLocaleString()} -{" "}
-                {job.max_salary.toLocaleString()}
+                {job.max_salary.toLocaleString()} {job.currency}
               </span>
             </div>
 

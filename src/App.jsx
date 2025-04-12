@@ -1,11 +1,11 @@
 import { Route, BrowserRouter as Router, Routes } from "react-router";
+import CVAnalysisDashboard from "./pages/Analysis";
+import BusinessIdeasPage from "./pages/BusinessIdeasPage";
 import HomePage from "./pages/HomePage";
 import LandingPage from "./pages/LandingPage";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import AuthProvider from "./providers/AuthProvider";
-import CVAnalysisDashboard from "./pages/Analysis";
-import BusinessIdeasPage from "./pages/BusinessIdeasPage";
 
 const App = () => {
   return (
@@ -17,7 +17,7 @@ const App = () => {
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/home" element={<HomePage />} />
           <Route path="/analysis" element={<CVAnalysisDashboard />} />
-          <Route path="/business-ideas" element={<BusinessIdeasPage/>}></Route>
+          <Route path="/business-ideas" element={<BusinessIdeasPage />}></Route>
         </Routes>
       </AuthProvider>
     </Router>

@@ -20,29 +20,28 @@ const DashboardCard = ({ title, value, description, color, children }) => {
 
 const DashboardCards = ({ onOpenModal }) => {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
       <DashboardCard
-        title="CV Diagnostic"
+        title="Diagnostic de CV"
         value="85%"
-        description="Your CV score compared to market"
+        description="Évalue ton CV par rapport au marché"
         color="white"
       >
         <Button onClick={onOpenModal} color="dark" type="button">
           Evaluer mon CV
         </Button>
       </DashboardCard>
+
       <DashboardCard
-        title="Career Switch"
-        value="3 Jobs"
-        description="Recommended for your profile"
+        title="Idée de business"
+        value="Personnalisée"
+        description="Génère une idée de business adaptée à ton profil"
         color="black"
-      />
-      <DashboardCard
-        title="Job Match"
-        value="92%"
-        description="Compatibility with top jobs"
-        color="white"
-      />
+      >
+        <Button color="light" type="button">
+          <Link to="/business">Générer une idée</Link>
+        </Button>
+      </DashboardCard>
     </div>
   );
 };
