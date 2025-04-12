@@ -1,3 +1,4 @@
+import { Link } from "react-router";
 import Button from "./Button";
 
 const DashboardCard = ({ title, value, description, color, children }) => {
