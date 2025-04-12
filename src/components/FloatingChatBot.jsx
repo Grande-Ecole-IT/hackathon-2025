@@ -1,16 +1,12 @@
 import { useEffect, useRef, useState } from "react";
-import { X, Send, Leaf } from "lucide-react";
-import { useAuth } from "../hooks/useAuth";
+import { X, Send, Bot, Sparkles } from "lucide-react";
 import ChatMessage from "../components/ChatMessage";
 
 export default function FloatingChatBot({ isOpen, setIsOpen }) {
-  const { user } = useAuth();
   const [messages, setMessages] = useState([]);
   const [inputMessage, setInputMessage] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef(null);
-  const messagesContainerRef = useRef(null);
-  const socket = useRef(null);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -20,153 +16,101 @@ export default function FloatingChatBot({ isOpen, setIsOpen }) {
     scrollToBottom();
   }, [messages]);
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     if (!inputMessage.trim()) return;
 
     const newMessages = [...messages, { text: inputMessage, isBot: false }];
     setMessages(newMessages);
-
-    if (socket.current?.readyState === WebSocket.OPEN) {
-      const message = {
-        type: "user_message",
-        content: inputMessage
-      }
-      socket.current.send(JSON.stringify(message));
-    }
-
     setInputMessage("");
     setIsTyping(true);
+
+    // Simulation réponse du bot
+    setTimeout(() => {
+      setIsTyping(false);
+      setMessages(prev => [...prev, { 
+        text: "Je suis votre assistant virtuel. Comment puis-je vous aider ?", 
+        isBot: true 
+      }]);
+    }, 1500);
   };
 
-  useEffect(() => {
-    // if (!user) return;
-    // const ws = new WebSocket(`https://agri-back-fo2l.onrender.com/ws/${user.$id}`);
-    // socket.current = ws;
-    // ws.onopen = () => {
-    //   console.log("Connexion WebSocket établie");
-    //   const initMessage = {
-    //     type: "prompt_init",
-    //     content: JSON.stringify(result),
-    //   };
-    //   ws.send(JSON.stringify(initMessage));
-    // };
-
-    // ws.onmessage = (event) => {
-    //   const newMessage = {
-    //     text: event.data,
-    //     isBot: true,
-    //   };
-    //   setIsTyping(true);
-
-    //   setTimeout(() => {
-    //     setIsTyping(false);
-    //     setMessages((prevMessages) => [...prevMessages, newMessage]);
-    //   }, 2000);
-    // };
-
-    // ws.onerror = (error) => {
-    //   console.error("Erreur WebSocket :", error);
-    // };
-
-    // ws.onclose = () => {
-    //   console.log("Connexion WebSocket fermée");
-    // };
-
-    // return () => {
-    //   ws.close();
-    // };
-  }, [user]);
-
   return (
-    <div className={`fixed bottom-6 right-6 z-50 ${isOpen ? "backdrop-blur-sm" : ""}`}>
-      {/* Chat Window */}
-      <div
-        className={`rounded-2xl absolute bottom-16 right-0 w-96 h-[500px] bg-white shadow-2xl transition-all duration-300 transform ${
-          isOpen
-            ? "scale-100 opacity-100"
-            : "scale-95 opacity-0 pointer-events-none"
-        } flex flex-col border border-gray-200 overflow-hidden`}
-      >
-        {/* Header */}
-        <div className="bg-gradient-to-r from-green-600 to-emerald-600 p-4 text-white">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <Leaf className="h-7 w-7 text-emerald-100" />
-              <h1 className="text-xl font-bold">AgroBot AI</h1>
-            </div>
-            <button
-              onClick={() => setIsOpen(false)}
-              className="p-1 rounded-full hover:bg-white/20 transition-colors"
-            >
-              <X className="h-5 w-5" />
-            </button>
-          </div>
-        </div>
-
-        {/* Messages Area */}
-        <div
-          ref={messagesContainerRef}
-          className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50 scrollbar-thin scrollbar-thumb-green-300 scrollbar-track-green-100"
-        >
-          {messages.map((message, index) => (
-            <ChatMessage
-              key={index}
-              message={message.text}
-              isBot={message.isBot}
-            />
-          ))}
-
-          {isTyping && (
-            <div className="flex items-center space-x-2 text-emerald-600 p-4">
-              <div className="flex space-x-1">
-                <div className="w-2 h-2 bg-emerald-500 rounded-full animate-bounce"></div>
-                <div className="w-2 h-2 bg-emerald-500 rounded-full animate-bounce delay-100"></div>
-                <div className="w-2 h-2 bg-emerald-500 rounded-full animate-bounce delay-200"></div>
+    <div className="fixed bottom-6 right-6 z-50">
+      {/* Fenêtre de chat - conditionnellement rendue */}
+      {isOpen && (
+        <div className="rounded-2xl bottom-20 right-0 w-96 h-[500px] bg-white dark:bg-gray-800 shadow-2xl flex flex-col border border-gray-200 dark:border-gray-700 overflow-hidden">
+          {/* En-tête */}
+          <div className="bg-gradient-to-r from-blue-600 to-indigo-600 p-4 text-white">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <Sparkles className="h-6 w-6 text-yellow-200" />
+                <h1 className="text-xl font-bold">Assistant Virtuel</h1>
               </div>
-              <span className="text-sm">AgroBot écrit...</span>
+              <button
+                onClick={() => setIsOpen(false)}
+                className="p-1 rounded-full hover:bg-white/20 transition-colors"
+              >
+                <X className="h-5 w-5" />
+              </button>
             </div>
-          )}
-          <div ref={messagesEndRef} />
-        </div>
-
-        {/* Input Area */}
-        <form
-          onSubmit={handleSubmit}
-          className="bg-white border-t border-gray-200 p-4"
-        >
-          <div className="flex gap-2">
-            <input
-              type="text"
-              value={inputMessage}
-              onChange={(e) => setInputMessage(e.target.value)}
-              placeholder="Posez votre question..."
-              className="flex-1 px-4 py-3 rounded-full bg-gray-100 text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white"
-            />
-            <button
-              type="submit"
-              className="p-3 rounded-full bg-emerald-600 text-white hover:bg-emerald-700 transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2"
-              disabled={!inputMessage.trim()}
-            >
-              <Send className="h-5 w-5" />
-            </button>
           </div>
-        </form>
-      </div>
 
-      {/* Floating Button */}
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className={`p-4 rounded-full shadow-lg transition-all duration-300 ${
-          isOpen ? "bg-emerald-600 rotate-90" : "bg-green-600 hover:bg-green-700 hover:scale-110"
-        }`}
-      >
-        {isOpen ? (
-          <X className="h-6 w-6 text-white" />
-        ) : (
-          <Leaf className="h-6 w-6 text-white" />
-        )}
-      </button>
+          {/* Zone de messages */}
+          <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50 dark:bg-gray-700">
+            {messages.map((message, index) => (
+              <ChatMessage key={index} message={message.text} isBot={message.isBot} />
+            ))}
+            {isTyping && (
+              <div className="flex items-center space-x-2 text-blue-600 dark:text-blue-300 p-4">
+                <div className="flex space-x-1">
+                  <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce" />
+                  <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce delay-100" />
+                  <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce delay-200" />
+                </div>
+                <span className="text-sm">L'assistant écrit...</span>
+              </div>
+            )}
+            <div ref={messagesEndRef} />
+          </div>
+
+          {/* Zone de saisie */}
+          <form onSubmit={handleSubmit} className="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 p-4">
+            <div className="flex gap-2">
+              <input
+                type="text"
+                value={inputMessage}
+                onChange={(e) => setInputMessage(e.target.value)}
+                placeholder="Posez votre question..."
+                className="flex-1 px-4 py-3 rounded-full bg-gray-100 dark:bg-gray-600 text-gray-800 dark:text-white placeholder-gray-400 dark:placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+              <button
+                type="submit"
+                className="p-3 rounded-full bg-blue-600 text-white hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50"
+                disabled={!inputMessage.trim()}
+              >
+                <Send className="h-5 w-5" />
+              </button>
+            </div>
+          </form>
+        </div>
+      )}
+
+      {/* Bouton flottant - seulement quand le chat est fermé */}
+      {!isOpen && (
+        <button
+          onClick={() => setIsOpen(true)}
+          className="p-4 rounded-full shadow-lg bg-gradient-to-br from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 hover:scale-110 transition-all duration-300"
+          aria-label="Ouvrir le chat"
+        >
+          <div className="relative">
+            <Bot className="h-6 w-6 text-white" />
+            <span className="absolute -top-1 -right-1 h-4 w-4 bg-red-500 rounded-full flex items-center justify-center text-xs text-white border border-white animate-pulse">
+              1
+            </span>
+          </div>
+        </button>
+      )}
     </div>
   );
 }

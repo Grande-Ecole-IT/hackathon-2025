@@ -8,6 +8,7 @@ import JobList from "../components/JobList";
 import Modal from "../components/Modal";
 import Navbar from "../components/Navbar";
 import { MessageCircle, X, Send } from "lucide-react";
+import FloatingChatBot from "../components/FloatingChatBot";
 
 const HomePage = () => {
   const [jobs, setJobs] = useState([]);
@@ -198,9 +199,9 @@ const HomePage = () => {
         onClick={() => setIsOpen(!isOpen)}
         className="fixed bottom-6 right-6 z-50 bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-4 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110"
         style={{
-          position: "fixed", // Double assurance pour le positionnement
-          right: "24px", // 6 * 4px = 24px
-          bottom: "24px", // 6 * 4px = 24px
+          position: "fixed",
+          right: "24px", 
+          bottom: "24px",
         }}
         aria-label="Ouvrir le chat"
       >

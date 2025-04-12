@@ -3,6 +3,7 @@ import { Doughnut } from "react-chartjs-2";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { useLocation } from "react-router";
 import { MessageCircle, X, Send } from "lucide-react";
+import FloatingChatBot from "../components/FloatingChatBot";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -345,28 +346,7 @@ export default function CVAnalysisDashboard() {
         </div>
       </div>
       {/* Floating Chat Icon - ABSOLUTE POSITION */}
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className="fixed bottom-6 animate-bounce right-6 z-50 w-14 h-14 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 border-2 border-white bg-white"
-        aria-label="Ouvrir le chat"
-      >
-        {isOpen ? (
-          <X className="h-6 w-6 text-gray-700 m-auto" />
-        ) : (
-          <div className="relative w-full h-full">
-            {/* Image du robot avec animation Tailwind */}
-            <img
-              src="https://cdn-icons-png.flaticon.com/512/4712/4712035.png"
-              alt="Chatbot"
-              className="w-full h-full p-2 object-contain"
-            />
-            {/* Badge de notification */}
-            <span className="absolute top-0 right-0 h-4 w-4 bg-red-500 rounded-full flex items-center justify-center text-xs text-white animate-pulse border border-white">
-              1
-            </span>
-          </div>
-        )}
-      </button>
+      <FloatingChatBot isOpen={isOpen} setIsOpen={setIsOpen} />
     </div>
   );
 }

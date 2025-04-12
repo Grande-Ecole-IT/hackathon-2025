@@ -208,20 +208,7 @@ function TabsSection() {
         skillsRequired: ["Connaissance de l'IA", "Conseil", "Analyse de besoins", "Gestion de projet"],
         potentialClients: ["PME", "Startups", "Professions libérales"],
       },
-    ],
-    innovative: [
-      {
-        title: "Marketplace de Talents Freelance Vérifiés",
-        description:
-          "Plateforme mettant en relation entreprises et freelances vérifiés avec matching IA.",
-        matchScore: 75,
-        investmentLevel: "Élevé",
-        timeToMarket: "6-12 mois",
-        competitionLevel: "Élevée",
-        skillsRequired: ["Développement", "Marketing", "RH", "Gestion communauté"],
-        potentialClients: ["Entreprises", "Freelances"],
-      },
-    ],
+    ]
   }
 
   return (
