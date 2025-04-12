@@ -40,7 +40,7 @@ const DashboardCards = ({ onOpenModal }) => {
         color="black"
       >
         <Button color="light" type="button">
-          <Link to="/business">Générer une idée</Link>
+          <Link to="/business-ideas">Générer une idée</Link>
         </Button>
       </DashboardCard>
     </div>
