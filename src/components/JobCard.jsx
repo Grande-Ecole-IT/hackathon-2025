@@ -50,7 +50,7 @@ const JobCard = ({ job }) => {
 
       {/* Modal-like pour l'expansion */}
       {isExpanded && (
-        <div className="fixed inset-0 backdrop-blur-lg flex items-center justify-center p-4 z-50">
+        <div className="fixed inset-0 backdrop-blur-lg bg-black/50 flex items-center justify-center p-4 z-50">
           <div
             className="bg-white rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6 relative shadow-2xl"
             onClick={(e) => e.stopPropagation()}

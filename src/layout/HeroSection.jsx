@@ -1,11 +1,15 @@
 /* eslint-disable no-unused-vars */
-import { OrbitControls } from "@react-three/drei";
-import { Canvas, useFrame } from "@react-three/fiber";
+import { OrbitControls, Text } from "@react-three/drei";
+import { Canvas, extend, useFrame } from "@react-three/fiber";
 import { AnimatePresence, motion } from "framer-motion";
-import { useRef, useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import { Link } from "react-router";
+import * as THREE from "three";
+import { LineDashedMaterial } from "three";
 import LoginForm from "./Login";
 import RegisterForm from "./Register";
+
+extend({ LineDashedMaterial });
 
 const FondAnime = () => {
   return (
@@ -53,6 +57,236 @@ const FondAnime = () => {
         />
       ))}
     </div>
+  );
+};
+
+const TechBackground = () => {
+  const group = useRef();
+  const nodes = useRef([]);
+
+  useFrame((state) => {
+    const time = state.clock.getElapsedTime();
+    group.current.rotation.y = time * 0.05;
+
+    nodes.current.forEach((node, i) => {
+      if (node) {
+        node.position.y = Math.sin(time * 0.3 + i * 2) * 0.3;
+        node.rotation.x = time * 0.1;
+      }
+    });
+  });
+
+  return (
+    <group ref={group}>
+      <NeuralNetwork count={12} radius={4} />
+
+      {[...Array(6)].map((_, i) => {
+        const angle = (i / 6) * Math.PI * 2;
+        const x = Math.cos(angle) * 5;
+        const z = Math.sin(angle) * 5;
+
+        return (
+          <group
+            key={i}
+            position={[x, 0, z]}
+            ref={(el) => (nodes.current[i] = el)}
+          >
+            <TechIcon type={i % 3} />
+          </group>
+        );
+      })}
+
+      <ConnectingLines count={6} radius={5} />
+    </group>
+  );
+};
+
+const NeuralNetwork = ({ count = 8, radius = 3 }) => {
+  const nodes = useRef([]);
+
+  useFrame(() => {
+    nodes.current.forEach((node) => {
+      if (node) {
+        node.rotation.y += 0.002;
+      }
+    });
+  });
+
+  return (
+    <group>
+      {[...Array(count)].map((_, i) => {
+        const angle = (i / count) * Math.PI * 2;
+        const x = Math.cos(angle) * radius;
+        const z = Math.sin(angle) * radius;
+
+        return (
+          <group
+            key={i}
+            position={[x, 0, z]}
+            ref={(el) => (nodes.current[i] = el)}
+          >
+            <mesh>
+              <sphereGeometry args={[0.3, 16, 16]} />
+              <meshStandardMaterial
+                color="#6366f1"
+                emissive="#6366f1"
+                emissiveIntensity={0.5}
+                metalness={0.8}
+                roughness={0.2}
+              />
+            </mesh>
+
+            {i < count - 1 && (
+              <Line
+                start={[x, 0, z]}
+                end={[
+                  Math.cos(angle + (Math.PI * 2) / count) * radius,
+                  0,
+                  Math.sin(angle + (Math.PI * 2) / count) * radius,
+                ]}
+                color="#a78bfa"
+              />
+            )}
+          </group>
+        );
+      })}
+    </group>
+  );
+};
+
+const TechIcon = ({ type = 0 }) => {
+  const mesh = useRef();
+
+  useFrame(() => {
+    mesh.current.rotation.y += 0.005;
+  });
+
+  const getShape = () => {
+    switch (type) {
+      case 0:
+        return (
+          <Text
+            fontSize={0.8}
+            color="#ffffff"
+            font="https://fonts.gstatic.com/s/raleway/v14/1Ptrg8zYS_SKggPNwK4vaqI.woff"
+          >
+            AI
+            <meshStandardMaterial
+              color="#ffffff"
+              emissive="#818cf8"
+              emissiveIntensity={0.8}
+              metalness={0.7}
+            />
+          </Text>
+        );
+      case 1:
+        return (
+          <mesh>
+            <boxGeometry args={[0.7, 0.7, 0.1]} />
+            <meshStandardMaterial
+              color="#c7d2fe"
+              emissive="#818cf8"
+              emissiveIntensity={0.3}
+              metalness={0.9}
+              roughness={0.1}
+            />
+          </mesh>
+        );
+      case 2:
+      default:
+        return (
+          <mesh>
+            <cylinderGeometry args={[0.5, 0.5, 0.8, 6]} />
+            <meshStandardMaterial
+              color="#a5b4fc"
+              emissive="#6366f1"
+              emissiveIntensity={0.4}
+              metalness={0.7}
+              transparent
+              opacity={0.8}
+            />
+          </mesh>
+        );
+    }
+  };
+
+  return (
+    <group ref={mesh}>
+      {getShape()}
+      <pointLight
+        color={type === 0 ? "#818cf8" : type === 1 ? "#a5b4fc" : "#6366f1"}
+        intensity={0.5}
+        distance={3}
+      />
+    </group>
+  );
+};
+
+const ConnectingLines = ({ count = 6, radius = 5 }) => {
+  const lines = useRef([]);
+
+  useFrame((state) => {
+    const time = state.clock.getElapsedTime();
+    lines.current.forEach((line) => {
+      if (line) {
+        line.material.opacity = 0.3 + Math.sin(time * 2) * 0.2;
+      }
+    });
+  });
+
+  return (
+    <>
+      {[...Array(count)].map((_, i) => {
+        const angle1 = (i / count) * Math.PI * 2;
+        const angle2 = (((i + 2) % count) / count) * Math.PI * 2;
+
+        return (
+          <Line
+            key={i}
+            ref={(el) => (lines.current[i] = el)}
+            start={[
+              Math.cos(angle1) * radius,
+              Math.sin(Date.now() * 0.0005 + i) * 0.3,
+              Math.sin(angle1) * radius,
+            ]}
+            end={[
+              Math.cos(angle2) * radius,
+              Math.sin(Date.now() * 0.0005 + i + 2) * 0.3,
+              Math.sin(angle2) * radius,
+            ]}
+            color="#a78bfa"
+            dashed
+          />
+        );
+      })}
+    </>
+  );
+};
+
+const Line = ({ start, end, color, dashed = false }) => {
+  const ref = useRef();
+
+  useLayoutEffect(() => {
+    ref.current.geometry.setFromPoints(
+      [start, end].map((point) => new THREE.Vector3(...point))
+    );
+  }, [start, end]);
+
+  return (
+    <line ref={ref}>
+      <bufferGeometry attach="geometry" />
+      {dashed ? (
+        <lineDashedMaterial
+          attach="material"
+          color={color}
+          dashSize={0.2}
+          gapSize={0.1}
+          linewidth={1}
+        />
+      ) : (
+        <lineBasicMaterial attach="material" color={color} linewidth={1} />
+      )}
+    </line>
   );
 };
 
@@ -122,6 +356,20 @@ export default function Accueil() {
   return (
     <div className="min-h-screen text-gray-800 overflow-x-hidden">
       <FondAnime />
+
+      {/* Nouveau fond 3D amélioré */}
+      <div className="fixed inset-0 z-0 opacity-20 pointer-events-none">
+        <Canvas camera={{ position: [0, 0, 15], fov: 50 }}>
+          <ambientLight intensity={0.3} color="#a5b4fc" />
+          <pointLight position={[10, 10, 10]} intensity={0.5} color="#818cf8" />
+          <pointLight
+            position={[-10, -10, -10]}
+            intensity={0.5}
+            color="#6366f1"
+          />
+          <TechBackground />
+        </Canvas>
+      </div>
 
       <BarreNavigation
         afficherConnexion={() => setAfficherConnexion(true)}
@@ -307,36 +555,58 @@ export default function Accueil() {
           ))}
         </motion.div>
 
-        {/* Section 3D */}
+        {/* Section 3D améliorée */}
         <motion.div
-          className="relative h-96 rounded-3xl overflow-hidden my-32 bg-white/80 backdrop-blur-sm border-2 border-blue-100/60 shadow-md"
+          className="relative h-[500px] rounded-3xl overflow-hidden my-32 bg-white/10 backdrop-blur-sm border-2 border-blue-100/30 shadow-lg"
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           transition={{ duration: 1 }}
           viewport={{ once: true }}
         >
-          <Canvas camera={{ position: [0, 0, 5], fov: 50 }}>
-            <ambientLight intensity={0.8} color="#a5b4fc" />
-            <pointLight position={[3, 3, 3]} intensity={0.8} color="#a5b4fc" />
+          <Canvas camera={{ position: [0, 0, 8], fov: 50 }}>
+            <ambientLight intensity={0.5} />
+            <pointLight position={[10, 10, 10]} intensity={1} color="#8b5cf6" />
+            <pointLight
+              position={[-10, -10, -10]}
+              intensity={1}
+              color="#3b82f6"
+            />
+
+            <mesh position={[0, 0, 0]}>
+              <torusGeometry args={[3, 0.3, 16, 100]} />
+              <meshStandardMaterial
+                color="#8b5cf6"
+                emissive="#8b5cf6"
+                emissiveIntensity={1.5}
+                metalness={0.9}
+                roughness={0.1}
+                transparent
+                opacity={0.9}
+              />
+            </mesh>
+
             <CoeurFlottant />
+
             <OrbitControls
-              enableZoom={false}
+              enableZoom={true}
               autoRotate
-              autoRotateSpeed={0.2}
+              autoRotateSpeed={0.5}
+              minPolarAngle={Math.PI / 4}
+              maxPolarAngle={Math.PI / 1.5}
             />
           </Canvas>
 
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
             <motion.div
-              className="text-center p-6 bg-white/80 backdrop-blur-sm rounded-xl border-2 border-blue-100/60 shadow-sm"
+              className="text-center p-8 bg-white/10 backdrop-blur-sm rounded-2xl border-2 border-blue-100/30 shadow-lg"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.8 }}
             >
-              <h3 className="text-3xl font-bold text-gray-800 mb-4">
+              <h3 className="text-4xl font-bold text-white mb-4 drop-shadow-lg">
                 Futur propulsé par l'IA
               </h3>
-              <p className="text-gray-600 max-w-md mx-auto">
+              <p className="text-white/90 max-w-md mx-auto text-lg drop-shadow-md">
                 Exploitez la puissance de l'IA pour booster votre potentiel
                 professionnel
               </p>

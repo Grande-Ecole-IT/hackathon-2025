@@ -94,7 +94,7 @@ const HomePage = () => {
                 Les métiers tendances:
               </h3>
 
-              <div className="bg-white/80 backdrop-blur-sm p-6 rounded-xl shadow-sm mb-6 border-2 border-blue-100/50">
+              <div className="  mb-6 ">
                 <div className="relative">
                   <input
                     type="text"
@@ -183,12 +183,43 @@ const HomePage = () => {
             exit={{ opacity: 0, y: 20 }}
             transition={{ duration: 0.4 }}
           >
-            <button
+            <motion.button
               onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-              className="pointer-events-auto bg-gradient-to-r from-blue-500 to-violet-500 backdrop-blur text-white px-6 py-3 rounded-full shadow-xl hover:from-blue-600 hover:to-violet-600 transition-all"
+              className="pointer-events-auto bg-white/10 backdrop-blur-lg p-3 rounded-full shadow-xl hover:shadow-2xl transition-all"
+              whileHover={{
+                scale: 1.1,
+                transition: { duration: 0.3 },
+              }}
+              whileTap={{ scale: 0.95 }}
             >
-              Up
-            </button>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="url(#gradient)"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <defs>
+                  <linearGradient
+                    id="gradient"
+                    x1="0%"
+                    y1="0%"
+                    x2="100%"
+                    y2="100%"
+                  >
+                    <stop offset="0%" stopColor="#6366f1" />
+                    <stop offset="50%" stopColor="#a855f7" />
+                    <stop offset="100%" stopColor="#ec4899" />
+                  </linearGradient>
+                </defs>
+                <path d="m5 12 7-7 7 7" />
+                <path d="M12 19V5" />
+              </svg>
+            </motion.button>
           </motion.div>
         )}
       </div>
