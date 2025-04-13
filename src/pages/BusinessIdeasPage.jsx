@@ -57,7 +57,7 @@ export default function BusinessIdeasPage() {
           <TabsSection />
 
           {/* Analyse des compétences */}
-          <div className="bg-white rounded-2xl shadow-lg p-8 border border-gray-100">
+          {/* <div className="bg-white rounded-2xl shadow-lg p-8 border border-gray-100">
             <div className="mb-8">
               <h2 className="text-2xl font-bold text-gray-900 mb-2">
                 Analyse de vos compétences clés
@@ -105,7 +105,7 @@ export default function BusinessIdeasPage() {
                 icon={<MessageCircle className="h-5 w-5 text-amber-500" />}
               />
             </div>
-          </div>
+          </div> */}
         </div>
 
         {/* Sidebar droite sticky */}
@@ -132,7 +132,7 @@ export default function BusinessIdeasPage() {
                 step={2}
                 title="Plan de lancement"
                 desc="Feuille de route complète pour transformer votre idée en réalité."
-                link="/launch-plan"
+                link="/plan"
                 button="Créer mon plan"
                 icon={<Map className="h-5 w-5" />}
               />
@@ -147,7 +147,7 @@ export default function BusinessIdeasPage() {
             </div>
 
             <Link
-              to="/launch-plan"
+              to="/plan"
               className="mt-8 w-full bg-gradient-to-r from-blue-500 to-violet-500 text-white font-semibold py-3 px-6 rounded-xl hover:shadow-lg transition-all flex items-center justify-center"
             >
               Créer mon business plan
