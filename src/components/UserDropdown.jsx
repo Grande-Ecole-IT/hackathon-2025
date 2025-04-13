@@ -32,8 +32,8 @@ const UserDropdown = () => {
           dark:hover:shadow-[2px_2px_5px_#0a0a0a,-2px_-2px_5px_#1e1e1e]
           transition-all duration-200`}
       >
-        {user?.avatar ? (
-          <img src={user.avatar} alt="User" className="w-8 h-8 rounded-full" />
+        {user?.picture ? (
+          <img src={user.picture} alt="User" className="w-8 h-8 rounded-full" />
         ) : (
           <div className="w-8 h-8 rounded-full bg-gray-300 dark:bg-gray-600 flex items-center justify-center">
             <User className="w-4 h-4 text-gray-600 dark:text-gray-300" />
