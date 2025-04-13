@@ -9,7 +9,7 @@ const BreadCrumb = () => {
   };
 
   return (
-    <div className="m-10">
+    <div className="fixed top-24 left-5">
       <nav aria-label="Breadcrumb">
         <ol className="flex items-center gap-2 text-md text-gray-700">
           <li>

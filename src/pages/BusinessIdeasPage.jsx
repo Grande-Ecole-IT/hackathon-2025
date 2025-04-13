@@ -35,7 +35,7 @@ export default function BusinessIdeasPage() {
       {/* Header avec animation et dégradé */}
       <Navbar />
       <BreadCrumb />
-      <div className="flex flex-col items-center text-center mb-16">
+      <div className="flex flex-col items-center text-center mb-16 mt-14">
         <div className="relative mb-6">
           <Lightbulb className="h-14 w-14 text-blue-500 z-10 relative" />
           <div className="absolute inset-0 bg-blue-100 rounded-full blur-md opacity-75 -z-0 animate-pulse" />
