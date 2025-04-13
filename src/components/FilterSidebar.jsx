@@ -8,11 +8,11 @@ const FilterSidebar = ({ onFilter }) => {
 
   const skillsOptions = [
     "Communication",
-    "Analysis",
-    "Technical",
+    "Analyse",
+    "Technique",
     "Management",
-    "Creativity",
-    "Problem Solving",
+    "Créativité",
+    "Résolution de problème",
   ];
 
   const handleSkillToggle = (skill) => {
@@ -26,11 +26,11 @@ const FilterSidebar = ({ onFilter }) => {
 
   return (
     <div className="bg-white p-6 rounded-xl shadow-lg h-fit sticky top-24">
-      <h3 className="font-bold text-lg mb-4 text-gray-900">Filters</h3>
+      <h3 className="font-bold text-lg mb-4 text-gray-900">Filtres</h3>
 
       <div className="mb-6">
         <label className="block text-sm font-medium mb-2 text-gray-700">
-          Salary Range
+          Grille salariale
         </label>
         <input
           type="range"
@@ -52,7 +52,7 @@ const FilterSidebar = ({ onFilter }) => {
 
       <div>
         <label className="block text-sm font-medium mb-2 text-gray-700">
-          Skills
+          Compétences
         </label>
         <div className="space-y-2">
           {skillsOptions.map((skill) => (
@@ -76,7 +76,7 @@ const FilterSidebar = ({ onFilter }) => {
         onClick={() => onFilter(filters)}
         className="mt-6 w-full bg-gradient-to-r from-blue-500 to-violet-500 text-white py-2 px-4 rounded-lg hover:bg-gray-800 transition-colors"
       >
-        Apply Filters
+        Appliquer
       </button>
     </div>
   );

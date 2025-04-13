@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import { motion } from "framer-motion";
-import { MessageCircle, X } from "lucide-react";
-import { useEffect, useState } from "react";
+import { MessageCircle, Search, TrendingUp, X } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import CardSkeleton from "../components/CardSkeleton";
 import DashboardCards from "../components/DashboardCards";
 import FilterSidebar from "../components/FilterSidebar";
@@ -20,9 +20,16 @@ const HomePage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [showScrollTop, setShowScrollTop] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const [message, setMessage] = useState("");
+  const jobsSectionRef = useRef(null);
 
   const jobsUri = "https://hackathon-2025-back.onrender.com/job-trend";
+
+  const scrollToJobs = () => {
+    jobsSectionRef.current?.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -82,41 +89,34 @@ const HomePage = () => {
       <Navbar />
       <div className="w-full h-auto pt-24 pb-10">
         <div className="container mx-auto px-4">
-          <DashboardCards onOpenModal={() => setIsModalOpen(true)} />
+          <DashboardCards
+            onOpenModal={() => setIsModalOpen(true)}
+            setIsOpen={setIsOpen}
+            scrollToJobs={scrollToJobs}
+          />
 
-          <div className="flex flex-col lg:flex-row gap-8">
+          <div ref={jobsSectionRef} className="flex flex-col lg:flex-row gap-8">
             <div className="lg:w-1/4">
               <FilterSidebar onFilter={handleFilter} />
             </div>
 
             <div className="lg:w-3/4">
-              <h3 className="py-6 text-2xl text-gray-800 font-medium">
+              <h3 className="py-6 text-2xl text-gray-800 font-medium flex items-center gap-2">
+                <TrendingUp className="text-blue-500" />
                 Les métiers tendances:
               </h3>
 
-              <div className="  mb-6 ">
+              <div className="mb-6">
                 <div className="relative">
                   <input
                     type="text"
                     placeholder="Rechercher des métiers ou compétences..."
-                    className="w-full px-4 py-3 rounded-lg border-2 border-blue-100/60 bg-white/50 
+                    className="w-full px-4 py-3 pl-10 rounded-lg border-2 border-blue-100/60 bg-white/50 
                               focus:outline-none focus:ring-2 focus:ring-violet-300 focus:border-transparent"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                   />
-                  <svg
-                    className="absolute right-3 top-3.5 h-5 w-5 text-blue-400"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                    />
-                  </svg>
+                  <Search className="absolute left-3 top-3.5 h-5 w-5 text-blue-400" />
                 </div>
               </div>
 
@@ -146,6 +146,7 @@ const HomePage = () => {
                   </button>
                 </div>
               )}
+
               {!loading && !error && (
                 <>
                   {filteredJobs.length === 0 ? (
@@ -175,6 +176,7 @@ const HomePage = () => {
             </div>
           </div>
         </div>
+
         {showScrollTop && (
           <motion.div
             className="fixed inset-x-0 bottom-4 flex justify-center z-50 pointer-events-none"
@@ -225,15 +227,11 @@ const HomePage = () => {
       </div>
 
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
-      {/* Floating Chat Icon - ABSOLUTE POSITION */}
+
+      {/* Floating Chat Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="fixed bottom-6 right-6 z-50 bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-4 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110"
-        style={{
-          position: "fixed",
-          right: "24px",
-          bottom: "24px",
-        }}
         aria-label="Ouvrir le chat"
       >
         {isOpen ? (
@@ -247,6 +245,7 @@ const HomePage = () => {
           </div>
         )}
       </button>
+
       <FloatingChatBot isOpen={isOpen} setIsOpen={setIsOpen} />
     </div>
   );

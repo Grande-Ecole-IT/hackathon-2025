@@ -1,4 +1,15 @@
 import { ArcElement, Chart as ChartJS, Legend, Tooltip } from "chart.js";
+import {
+  Award,
+  BarChart2,
+  ChevronDown,
+  ChevronUp,
+  Code,
+  FileText,
+  TrendingUp,
+  UserCheck,
+  Zap,
+} from "lucide-react";
 import { useEffect, useState } from "react";
 import { Doughnut } from "react-chartjs-2";
 import { useLocation } from "react-router";
@@ -10,18 +21,21 @@ export default function CVAnalysisDashboard() {
   const location = useLocation();
   const { data, file } = location.state || {};
   const [fileUrl, setFileUrl] = useState("");
-  const [activeTab, setActiveTab] = useState("Soft Skills"); // Changé pour Soft Skills par défaut
+  const [activeTab, setActiveTab] = useState("Soft Skills");
   const [expandedSkill, setExpandedSkill] = useState(null);
   const [showFullScoreDescription, setShowFullScoreDescription] =
     useState(false);
 
-  // Couleurs du thème
+  // Couleurs du thème cohérentes avec le reste de l'application
   const themeColors = {
-    primary: "#6473FF",
-    secondary: "#7864FF",
-    accent: "#00B38F",
-    light: "#F0F4F8",
-    dark: "#1E293B",
+    primary: "#6366f1", // violet-500
+    secondary: "#8b5cf6", // violet-600
+    accent: "#a855f7", // violet-700
+    light: "#f5f3ff", // violet-50
+    dark: "#4c1d95", // violet-900
+    success: "#10b981", // emerald-500
+    warning: "#f59e0b", // amber-500
+    danger: "#ef4444", // red-500
   };
 
   useEffect(() => {
@@ -33,10 +47,10 @@ export default function CVAnalysisDashboard() {
   }, [file]);
 
   const getScoreColor = (score) => {
-    if (score > 75) return themeColors.accent;
+    if (score > 75) return themeColors.success;
     if (score > 50) return themeColors.primary;
-    if (score > 25) return themeColors.secondary;
-    return themeColors.secondary;
+    if (score > 25) return themeColors.warning;
+    return themeColors.danger;
   };
 
   const chartData = {
@@ -49,7 +63,7 @@ export default function CVAnalysisDashboard() {
         ],
         backgroundColor: [
           getScoreColor(data?.global_evaluation?.score),
-          themeColors.light,
+          "#e2e8f0", // gray-200
         ],
         borderWidth: 0,
       },
@@ -64,75 +78,40 @@ export default function CVAnalysisDashboard() {
     setShowFullScoreDescription(!showFullScoreDescription);
   };
 
-  const truncateText = (text, length = 50) => {
-    if (!text) return "";
-    return text.length > length ? `${text.substring(0, length)}...` : text;
-  };
-
   return (
-    <div
-      className="min-h-screen bg-gray-50 flex flex-col"
-      style={{ backgroundColor: themeColors.light }}
-    >
+    <div className="min-h-screen bg-gradient-to-br from-blue-50/30 to-violet-50/30">
       <Navbar />
 
-      <div className="flex-1 overflow-auto p-4 mt-18">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Colonne centrale - CV */}
-          <div className="flex flex-col">
-            <div className="flex-1 flex flex-col">
-              <div className="flex-1 flex items-start justify-center">
-                {file && file.type.startsWith("image/") && (
-                  <img
-                    src={fileUrl}
-                    alt="Aperçu du CV"
-                    className="max-w-full max-h-[70vh] object-contain rounded"
-                  />
-                )}
-              </div>
-            </div>
-          </div>
-
+      <div className="container mx-auto px-4 py-6 pt-24">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Colonne gauche - Score et Compétences */}
           <div className="space-y-6">
-            {/* Carte Score - Version compacte/étendue */}
-            {showFullScoreDescription ? (
-              <div
-                className="rounded-xl shadow-md p-6 transition-all"
-                style={{
-                  backgroundColor: "white",
-                  borderLeft: `4px solid ${themeColors.primary}`,
-                }}
-              >
-                <h3
-                  className="text-lg font-semibold mb-3"
-                  style={{ color: themeColors.dark }}
-                >
-                  Score Global: {data?.global_evaluation?.score || 0}/100
-                </h3>
-                <p className="text-sm" style={{ color: themeColors.dark }}>
-                  {data?.global_evaluation?.description}
-                </p>
-                <button
-                  onClick={toggleScoreDescription}
-                  className="mt-3 text-sm font-medium"
-                  style={{ color: themeColors.primary }}
-                >
-                  Voir le graphique
-                </button>
-              </div>
-            ) : (
-              <div
-                className="rounded-xl shadow-md p-6 transition-all hover:shadow-lg"
-                style={{
-                  backgroundColor: "white",
-                  borderLeft: `4px solid ${themeColors.primary}`,
-                }}
-              >
-                <div className="flex items-center">
+            {/* Carte Score */}
+            <div className="bg-white/90 backdrop-blur-sm rounded-xl border-2 border-blue-100/50 shadow-sm p-6 transition-all hover:shadow-md">
+              {showFullScoreDescription ? (
+                <div className="space-y-4">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 rounded-lg bg-blue-100/50 text-blue-600">
+                      <Award className="h-5 w-5" />
+                    </div>
+                    <h3 className="text-lg font-semibold text-gray-800">
+                      Score Global: {data?.global_evaluation?.score || 0}/100
+                    </h3>
+                  </div>
+                  <p className="text-sm text-gray-600">
+                    {data?.global_evaluation?.description}
+                  </p>
+                  <button
+                    onClick={toggleScoreDescription}
+                    className="text-sm font-medium text-blue-500 hover:text-blue-600 flex items-center gap-1"
+                  >
+                    <BarChart2 className="h-4 w-4" />
+                    Voir le graphique
+                  </button>
+                </div>
+              ) : (
+                <div className="flex items-center gap-4">
                   <div className="relative w-24 h-24">
-                    {" "}
-                    {/* Taille augmentée */}
                     <Doughnut
                       data={chartData}
                       options={{
@@ -141,118 +120,82 @@ export default function CVAnalysisDashboard() {
                       }}
                     />
                     <div className="absolute inset-0 flex items-center justify-center">
-                      <span
-                        className="text-2xl font-bold"
-                        style={{ color: themeColors.dark }}
-                      >
+                      <span className="text-xl font-bold text-gray-800">
                         {data?.global_evaluation?.score || 0}
                       </span>
                     </div>
                   </div>
-                  <div className="ml-4">
-                    <h3
-                      className="text-lg font-semibold"
-                      style={{ color: themeColors.dark }}
-                    >
-                      Score Global
-                    </h3>
-                    <p
-                      className="text-sm"
-                      style={{ color: themeColors.primary }}
-                    >
-                      {truncateText(data?.global_evaluation?.description, 60)}
-                      {data?.global_evaluation?.description?.length > 60 && (
-                        <button
-                          onClick={toggleScoreDescription}
-                          className="ml-1 text-sm font-medium"
-                          style={{ color: themeColors.primary }}
-                        >
-                          Voir plus
-                        </button>
-                      )}
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <TrendingUp className="h-5 w-5 text-blue-500" />
+                      <h3 className="text-lg font-semibold text-gray-800">
+                        Score Global
+                      </h3>
+                    </div>
+                    <p className="text-sm text-gray-600 mt-1">
+                      {data?.global_evaluation?.description?.substring(0, 60)}
+                      ...
                     </p>
+                    <button
+                      onClick={toggleScoreDescription}
+                      className="text-sm font-medium text-blue-500 hover:text-blue-600 flex items-center gap-1 mt-2"
+                    >
+                      <ChevronDown className="h-4 w-4" />
+                      Voir plus
+                    </button>
                   </div>
                 </div>
-              </div>
-            )}
+              )}
+            </div>
 
             {/* Compétences Techniques */}
-            <div
-              className="rounded-xl shadow-md p-6 transition-all hover:shadow-lg"
-              style={{ backgroundColor: "white" }}
-            >
-              <h2
-                className="text-xl font-semibold mb-4 pb-2 border-b"
-                style={{
-                  color: themeColors.dark,
-                  borderColor: themeColors.light,
-                }}
-              >
-                Compétences Techniques
-              </h2>
+            <div className="bg-white/90 backdrop-blur-sm rounded-xl border-2 border-blue-100/50 shadow-sm p-6">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="p-2 rounded-lg bg-blue-100/50 text-blue-600">
+                  <Code className="h-5 w-5" />
+                </div>
+                <h2 className="text-lg font-semibold text-gray-800">
+                  Compétences Techniques
+                </h2>
+              </div>
               <div className="space-y-3">
                 {data?.hard_skills?.map((skill, index) => (
                   <div
                     key={index}
-                    className={`border rounded-lg overflow-hidden transition-all duration-200 ${
-                      expandedSkill === index
-                        ? "border-gray-300"
-                        : "border-transparent"
+                    className={`rounded-lg overflow-hidden transition-all ${
+                      expandedSkill === index ? "bg-blue-50/50" : ""
                     }`}
                   >
                     <div
-                      className="p-3 flex justify-between items-center cursor-pointer hover:bg-gray-50"
+                      className="p-3 flex justify-between items-center cursor-pointer hover:bg-blue-50/30 text-sm"
                       onClick={() => toggleSkill(index)}
-                      style={{
-                        backgroundColor:
-                          expandedSkill === index
-                            ? themeColors.light
-                            : "transparent",
-                      }}
                     >
-                      <span
-                        className="font-medium"
-                        style={{ color: themeColors.dark }}
-                      >
-                        {skill.name}
-                      </span>
-                      <div className="flex items-center">
+                      <div className="flex items-center gap-2">
+                        <Zap className="h-4 w-4 text-yellow-500" />
+                        <span className="font-medium text-gray-800">
+                          {skill.name}
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-2">
                         <span
-                          className="text-sm px-2 py-1 rounded mr-2"
+                          className="text-xs px-2 py-1 rounded-full bg-blue-100/50 text-blue-600"
                           style={{
-                            backgroundColor: themeColors.light,
-                            color: themeColors.primary,
+                            backgroundColor: `${getScoreColor(skill.score)}20`,
+                            color: getScoreColor(skill.score),
                           }}
                         >
                           {skill.score}/100
                         </span>
-                        <svg
-                          className={`w-4 h-4 transform transition-transform ${
-                            expandedSkill === index ? "rotate-180" : ""
-                          }`}
-                          style={{ color: themeColors.primary }}
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M19 9l-7 7-7-7"
-                          />
-                        </svg>
+                        {expandedSkill === index ? (
+                          <ChevronUp className="h-4 w-4 text-blue-500" />
+                        ) : (
+                          <ChevronDown className="h-4 w-4 text-blue-500" />
+                        )}
                       </div>
                     </div>
                     {expandedSkill === index && (
-                      <div
-                        className="px-3 pb-3 pt-1 animate-fadeIn"
-                        style={{ backgroundColor: themeColors.light }}
-                      >
-                        <div
-                          className="w-full rounded-full h-2 mb-2"
-                          style={{ backgroundColor: themeColors.light }}
-                        >
+                      <div className="px-3 pb-3 pt-1 bg-blue-50/30 animate-[fadeIn_0.2s_ease-out]">
+                        <div className="w-full rounded-full h-2 mb-2 bg-blue-100/50">
                           <div
                             className="h-2 rounded-full"
                             style={{
@@ -261,26 +204,20 @@ export default function CVAnalysisDashboard() {
                             }}
                           />
                         </div>
-                        <div className="flex justify-between text-xs mb-2">
-                          <span style={{ color: themeColors.dark }}>
-                            Niveau
-                          </span>
+                        <div className="flex justify-between text-xs text-gray-600 mb-2">
+                          <span>Niveau</span>
                           <span
-                            style={{
-                              color:
-                                skill.risk_level === "Élevé"
-                                  ? "#EF4444"
-                                  : themeColors.primary,
-                            }}
+                            className={
+                              skill.risk_level === "Élevé"
+                                ? "text-red-500"
+                                : "text-blue-500"
+                            }
                           >
                             {skill.risk_level} risque
                           </span>
                         </div>
                         {skill.description && (
-                          <p
-                            className="text-sm"
-                            style={{ color: themeColors.dark }}
-                          >
+                          <p className="text-sm text-gray-600">
                             {skill.description}
                           </p>
                         )}
@@ -292,126 +229,128 @@ export default function CVAnalysisDashboard() {
             </div>
           </div>
 
-          {/* Colonne droite - Axes d'amélioration */}
-          <div className="space-y-6">
-            <div
-              className="rounded-xl shadow-md p-6 transition-all hover:shadow-lg"
-              style={{ backgroundColor: "white" }}
-            >
-              <div
-                className="flex items-center justify-between mb-4 pb-2 border-b"
-                style={{ borderColor: themeColors.light }}
-              >
-                <h2
-                  className="text-xl font-semibold"
-                  style={{ color: themeColors.dark }}
-                >
-                  Axes d'Amélioration
+          {/* Colonne centrale - Aperçu du CV */}
+          <div className="flex flex-col">
+            <div className="bg-white/90 backdrop-blur-sm rounded-xl border-2 border-blue-100/50 shadow-sm p-6 h-full flex flex-col">
+              <div className="flex items-center gap-2 mb-4">
+                <div className="p-2 rounded-lg bg-blue-100/50 text-blue-600">
+                  <FileText className="h-5 w-5" />
+                </div>
+                <h2 className="text-lg font-semibold text-gray-800">
+                  Votre CV
                 </h2>
-                <div
-                  className="flex rounded-lg p-1"
-                  style={{ backgroundColor: themeColors.light }}
-                >
-                  {["Soft Skills", "Hard Skills"].map(
-                    (
-                      tab // Ordre inversé
-                    ) => (
+              </div>
+              <div className="flex-1 flex items-start justify-center p-2">
+                {file && file.type.startsWith("image/") && (
+                  <img
+                    src={fileUrl}
+                    alt="Aperçu du CV"
+                    className="max-w-full max-h-[70vh] object-contain rounded-lg border border-blue-100/50"
+                  />
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Colonne droite - Axes d'amélioration */}
+          {/* Colonne droite - Axes d'amélioration (version épurée) */}
+          <div className="space-y-6">
+            {/* Carte Axes d'Amélioration */}
+            <div className="bg-white/90 backdrop-blur-sm rounded-xl border-2 border-blue-100/50 shadow-sm p-6">
+              <div className="flex flex-col gap-4">
+                {/* En-tête avec onglets */}
+                <div className="flex flex-col gap-3">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 rounded-lg bg-blue-100/50 text-blue-600">
+                      <UserCheck className="h-5 w-5" />
+                    </div>
+                    <h2 className="text-lg font-semibold text-gray-800">
+                      Axes d'Amélioration
+                    </h2>
+                  </div>
+
+                  {/* Onglets simplifiés */}
+                  <div className="flex border-b border-blue-100">
+                    {["Soft Skills", "Hard Skills"].map((tab) => (
                       <button
                         key={tab}
                         onClick={() => setActiveTab(tab)}
-                        className={`px-3 py-1 text-sm rounded-md transition-all ${
+                        className={`px-4 py-2 text-sm font-medium transition-all relative ${
                           activeTab === tab
-                            ? "shadow text-white"
-                            : "text-gray-600"
+                            ? "text-blue-600 after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-blue-500"
+                            : "text-gray-500 hover:text-blue-500"
                         }`}
-                        style={{
-                          backgroundColor:
-                            activeTab === tab
-                              ? themeColors.primary
-                              : "transparent",
-                        }}
                       >
                         {tab}
                       </button>
-                    )
-                  )}
+                    ))}
+                  </div>
                 </div>
-              </div>
 
-              <div className="space-y-3">
-                {(activeTab === "Hard Skills"
-                  ? data?.improvement_areas?.hard_skills
-                  : data?.improvement_areas?.soft_skills
-                )?.map((area, index) => (
-                  <div
-                    key={index}
-                    className="p-4 rounded-lg transition-all hover:shadow-sm"
-                    style={{
-                      backgroundColor: themeColors.light,
-                      borderLeft: `3px solid ${
-                        activeTab === "Hard Skills"
-                          ? themeColors.primary
-                          : themeColors.secondary
-                      }`,
-                    }}
-                  >
-                    <div className="flex items-start">
-                      <div>
-                        <p
-                          className="font-medium"
-                          style={{ color: themeColors.dark }}
+                {/* Liste des améliorations */}
+                <div className="space-y-2">
+                  {(activeTab === "Hard Skills"
+                    ? data?.improvement_areas?.hard_skills
+                    : data?.improvement_areas?.soft_skills
+                  )?.map((area, index) => (
+                    <div
+                      key={index}
+                      className="p-3 rounded-lg transition-all hover:bg-blue-50/30"
+                    >
+                      <div className="flex items-start gap-3">
+                        <div
+                          className={`mt-0.5 flex-shrink-0 ${
+                            activeTab === "Hard Skills"
+                              ? "text-blue-500"
+                              : "text-purple-500"
+                          }`}
                         >
-                          {area.name}
-                        </p>
-                        <p
-                          className="text-sm mt-1"
-                          style={{ color: themeColors.primary }}
-                        >
-                          {area.reason}
-                        </p>
+                          {activeTab === "Hard Skills" ? (
+                            <Code className="h-4 w-4" />
+                          ) : (
+                            <UserCheck className="h-4 w-4" />
+                          )}
+                        </div>
+                        <div>
+                          <p className="font-medium text-gray-800">
+                            {area.name}
+                          </p>
+                          <p className="text-sm text-gray-600 mt-1">
+                            {area.reason}
+                          </p>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
             </div>
 
-            <div
-              className="rounded-xl shadow-md p-6 transition-all hover:shadow-lg"
-              style={{ backgroundColor: "white" }}
-            >
-              <h2
-                className="text-xl font-semibold mb-4 pb-2 border-b"
-                style={{
-                  color: themeColors.dark,
-                  borderColor: themeColors.light,
-                }}
-              >
-                Détails d'Évaluation
-              </h2>
+            {/* Détails d'évaluation (resté identique mais plus cohérent) */}
+            <div className="bg-white/90 backdrop-blur-sm rounded-xl border-2 border-blue-100/50 shadow-sm p-6">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="p-2 rounded-lg bg-blue-100/50 text-blue-600">
+                  <BarChart2 className="h-5 w-5" />
+                </div>
+                <h2 className="text-lg font-semibold text-gray-800">
+                  Détails d'Évaluation
+                </h2>
+              </div>
               <div className="grid grid-cols-2 gap-3">
                 {data?.global_evaluation?.details?.map((detail, index) => (
                   <div
                     key={index}
-                    className="p-3 rounded-lg text-center transition-all hover:shadow-sm"
-                    style={{ backgroundColor: themeColors.light }}
+                    className="p-3 rounded-lg bg-blue-50/30 text-center hover:bg-blue-100/30 transition-colors"
                   >
+                    <p className="text-xs text-blue-600">{detail.label}</p>
                     <p
-                      className="text-xs"
-                      style={{ color: themeColors.primary }}
-                    >
-                      {detail.label}
-                    </p>
-                    <p
-                      className="font-medium text-sm"
-                      style={{
-                        color:
-                          detail.value === "Faible"
-                            ? "#10B981"
-                            : detail.value === "Moyen"
-                            ? "#F59E0B"
-                            : "#EF4444",
-                      }}
+                      className={`text-sm font-medium ${
+                        detail.value === "Fort"
+                          ? "text-green-500"
+                          : detail.value === "Moyen"
+                          ? "text-yellow-500"
+                          : "text-red-500"
+                      }`}
                     >
                       {detail.value}
                     </p>
