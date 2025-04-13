@@ -87,8 +87,8 @@ const HomePage = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50/30 to-violet-50/30">
       <Navbar />
-      <div className="w-full h-auto pt-24 pb-10">
-        <div className="container mx-auto px-4">
+      <div className="w-full h-auto pt-24 pb-10 px-20">
+        <div className="mx-auto px-4">
           <DashboardCards
             onOpenModal={() => setIsModalOpen(true)}
             setIsOpen={setIsOpen}
