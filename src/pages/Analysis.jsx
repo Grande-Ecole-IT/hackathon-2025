@@ -34,8 +34,8 @@ export default function CVAnalysisDashboard() {
     light: "#f5f3ff", // violet-50
     dark: "#4c1d95", // violet-900
     success: "#10b981", // emerald-500
-    warning: "#f59e0b", // amber-500
-    danger: "#ef4444", // red-500
+    danger: "#f59e0b", // amber-500
+    warning: "#ef4444", // red-500
   };
 
   useEffect(() => {
@@ -47,10 +47,10 @@ export default function CVAnalysisDashboard() {
   }, [file]);
 
   const getScoreColor = (score) => {
-    if (score > 75) return themeColors.success;
-    if (score > 50) return themeColors.primary;
-    if (score > 25) return themeColors.warning;
-    return themeColors.danger;
+    if (score > 75) return themeColors.accent;
+    if (score > 50) return themeColors.warning;
+    if (score > 25) return themeColors.danger;
+    return themeColors.success;
   };
 
   const chartData = {
@@ -340,8 +340,9 @@ export default function CVAnalysisDashboard() {
                 {data?.global_evaluation?.details?.map((detail, index) => (
                   <div
                     key={index}
-                    className="p-3 rounded-lg bg-blue-50/30 text-center hover:bg-blue-100/30 transition-colors"
+                    className="p-3 rounded-lg bg-blue-50/30 hover:bg-blue-100/30 transition-colors"
                   >
+                    <span>{detail.icon}</span>
                     <p className="text-xs text-blue-600">{detail.label}</p>
                     <p
                       className={`text-sm font-medium ${
