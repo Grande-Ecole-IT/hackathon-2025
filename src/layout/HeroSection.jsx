@@ -166,7 +166,7 @@ export default function Accueil() {
           //     setAfficherConnexion(true);
           //   }}
           // />
-          <SignupForm/>
+          <SignupForm setAfficherInscription={setAfficherInscription} />
         )}
       </AnimatePresence>
 

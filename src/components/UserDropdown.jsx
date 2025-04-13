@@ -33,7 +33,7 @@ const UserDropdown = () => {
           transition-all duration-200`}
       >
         {user?.picture ? (
-          <img src={user.picture} alt="User" className="w-8 h-8 rounded-full" />
+          <img src={user?.picture} alt="User" className="w-8 h-8 rounded-full" />
         ) : (
           <div className="w-8 h-8 rounded-full bg-gray-300 dark:bg-gray-600 flex items-center justify-center">
             <User className="w-4 h-4 text-gray-600 dark:text-gray-300" />

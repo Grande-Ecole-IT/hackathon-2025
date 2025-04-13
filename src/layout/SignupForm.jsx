@@ -1,11 +1,11 @@
 /* eslint-disable no-unused-vars */
-import { useState } from "react"
-import { motion } from "framer-motion"
-import { Loader } from "lucide-react"
-import { useAuth } from "../hooks/useAuth"
-import { useNavigate } from "react-router"
+import { useState } from "react";
+import { motion } from "framer-motion";
+import { Loader, X } from "lucide-react";
+import { useAuth } from "../hooks/useAuth";
+import { useNavigate } from "react-router";
 
-const SignupForm = () => {
+const SignupForm = ({setAfficherInscription}) => {
   const [formData, setFormData] = useState({
     username: "",
     email: "",
@@ -13,15 +13,15 @@ const SignupForm = () => {
     sector: "",
     skills: [],
     profilePhoto: null,
-  })
+  });
 
-  const {register} = useAuth()
+  const { register } = useAuth();
 
-  const [skillInput, setSkillInput] = useState("")
-  const [previewUrl, setPreviewUrl] = useState(null)
-  const [loading, setLoading] = useState(false)
-  const navigate = useNavigate()
-  
+  const [skillInput, setSkillInput] = useState("");
+  const [previewUrl, setPreviewUrl] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+
   const sectors = [
     "Technologie",
     "Santé",
@@ -31,82 +31,81 @@ const SignupForm = () => {
     "Design",
     "Industrie manufacturière",
     "Commerce de détail",
-    "Autre"
-]
+    "Autre",
+  ];
 
   const handleChange = (e) => {
-    const { name, value } = e.target
+    const { name, value } = e.target;
     setFormData({
       ...formData,
       [name]: value,
-    })
-  }
+    });
+  };
 
   const handlePhotoChange = (e) => {
-    const file = e.target.files[0]
+    const file = e.target.files[0];
     if (file) {
       setFormData({
         ...formData,
         profilePhoto: file,
-      })
+      });
 
       // Create preview URL
-      const reader = new FileReader()
+      const reader = new FileReader();
       reader.onloadend = () => {
-        setPreviewUrl(reader.result)
-      }
-      reader.readAsDataURL(file)
+        setPreviewUrl(reader.result);
+      };
+      reader.readAsDataURL(file);
     }
-  }
+  };
 
   const addSkill = () => {
     if (skillInput.trim() && !formData.skills.includes(skillInput.trim())) {
       setFormData({
         ...formData,
         skills: [...formData.skills, skillInput.trim()],
-      })
-      setSkillInput("")
+      });
+      setSkillInput("");
     }
-  }
+  };
 
   const removeSkill = (skillToRemove) => {
     setFormData({
       ...formData,
       skills: formData.skills.filter((skill) => skill !== skillToRemove),
-    })
-  }
+    });
+  };
 
   const handleSkillInputKeyDown = (e) => {
     if (e.key === "Enter") {
-      e.preventDefault()
-      addSkill()
+      e.preventDefault();
+      addSkill();
     }
-  }
+  };
 
   const handleSubmit = (e) => {
-    e.preventDefault()
+    e.preventDefault();
     setLoading(true);
-    register({...formData, competences : formData.skills}).then(() => {
-      navigate("/home");
-    }).catch((error) => {
-      console.error("Error during registration:", error);
-    }
-    ).finally(() => {
-      setLoading(false);
-    }
-    )
-  }
+    register({ ...formData, competences: formData.skills })
+      .then(() => {
+        navigate("/home");
+      })
+      .catch((error) => {
+        console.error("Error during registration:", error);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
 
   return (
-    
     <div className="fixed inset-0 z-50 bg-black/50 flex flex-col justify-center py-12 sm:px-6 lg:px-8 backdrop-blur">
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
         className="sm:mx-auto sm:w-full sm:max-w-md"
-      >
-      </motion.div>
+      ></motion.div>
 
       <motion.div
         initial={{ opacity: 0 }}
@@ -133,15 +132,70 @@ const SignupForm = () => {
           />
 
           <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10 relative z-10">
+            <X onClick={() => {setAfficherInscription(false)}} />
             <form className="space-y-6" onSubmit={handleSubmit}>
+              {/* Profile photo field */}
+              <div className="w-full flex flex-col items-center">
+                <label className="block text-md font-medium text-gray-700">
+                  Photo de profil
+                </label>
+                <div className="mt-1 flex flex-col items-center space-y-5">
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    className="flex-shrink-0"
+                  >
+                    {previewUrl ? (
+                      <div className="h-36 w-36 rounded-full overflow-hidden bg-gray-100">
+                        <img
+                          src={previewUrl || "/placeholder.svg"}
+                          alt="Preview"
+                          className="h-full w-full object-cover border-blue-700 border-2"
+                        />
+                      </div>
+                    ) : (
+                      <div className="h-24 w-24 rounded-full overflow-hidden bg-gray-100 flex items-center justify-center">
+                        <svg
+                          className="h-12 w-12 text-gray-300"
+                          fill="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
+                        </svg>
+                      </div>
+                    )}
+                  </motion.div>
+                  <motion.div
+                    whileHover={{ scale: 1.03 }}
+                    whileTap={{ scale: 0.97 }}
+                    className="relative"
+                  >
+                    <input
+                      id="profile-photo"
+                      name="profile-photo"
+                      type="file"
+                      accept="image/*"
+                      onChange={handlePhotoChange}
+                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                    />
+                    <label
+                      htmlFor="profile-photo"
+                      className="cursor-pointer bg-white py-2 px-3 border border-gray-300 rounded-md shadow-sm text-sm leading-4 font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                    >
+                      Changer
+                    </label>
+                  </motion.div>
+                </div>
+              </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* Section 1: Basic Information */}
                 <div className="space-y-6">
-
-
                   {/* Username field */}
                   <div>
-                    <label htmlFor="username" className="block text-sm font-medium text-gray-700">
+                    <label
+                      htmlFor="username"
+                      className="block text-sm font-medium text-gray-700"
+                    >
                       Nom d'utilisateur
                     </label>
                     <div className="mt-1">
@@ -159,7 +213,10 @@ const SignupForm = () => {
 
                   {/* Email field */}
                   <div>
-                    <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                    <label
+                      htmlFor="email"
+                      className="block text-sm font-medium text-gray-700"
+                    >
                       Email
                     </label>
                     <div className="mt-1">
@@ -178,7 +235,10 @@ const SignupForm = () => {
 
                   {/* Password field */}
                   <div>
-                    <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+                    <label
+                      htmlFor="password"
+                      className="block text-sm font-medium text-gray-700"
+                    >
                       Mot de passe
                     </label>
                     <div className="mt-1">
@@ -198,48 +258,12 @@ const SignupForm = () => {
 
                 {/* Section 2: Professional Information */}
                 <div className="space-y-6">
-                  {/* Profile photo field */}
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700">Photo de profil</label>
-                    <div className="mt-1 flex items-center space-x-5">
-                      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex-shrink-0">
-                        {previewUrl ? (
-                          <div className="h-24 w-24 rounded-full overflow-hidden bg-gray-100">
-                            <img
-                              src={previewUrl || "/placeholder.svg"}
-                              alt="Preview"
-                              className="h-full w-full object-cover"
-                            />
-                          </div>
-                        ) : (
-                          <div className="h-24 w-24 rounded-full overflow-hidden bg-gray-100 flex items-center justify-center">
-                            <svg className="h-12 w-12 text-gray-300" fill="currentColor" viewBox="0 0 24 24">
-                              <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
-                            </svg>
-                          </div>
-                        )}
-                      </motion.div>
-                      <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }} className="relative">
-                        <input
-                          id="profile-photo"
-                          name="profile-photo"
-                          type="file"
-                          accept="image/*"
-                          onChange={handlePhotoChange}
-                          className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                        />
-                        <label
-                          htmlFor="profile-photo"
-                          className="cursor-pointer bg-white py-2 px-3 border border-gray-300 rounded-md shadow-sm text-sm leading-4 font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                        >
-                          Changer
-                        </label>
-                      </motion.div>
-                    </div>
-                  </div>
                   {/* Sector field */}
                   <div>
-                    <label htmlFor="sector" className="block text-sm font-medium text-gray-700">
+                    <label
+                      htmlFor="sector"
+                      className="block text-sm font-medium text-gray-700"
+                    >
                       Secteur d'activité
                     </label>
                     <div className="mt-1">
@@ -263,7 +287,10 @@ const SignupForm = () => {
 
                   {/* Skills field */}
                   <div>
-                    <label htmlFor="skills" className="block text-sm font-medium text-gray-700">
+                    <label
+                      htmlFor="skills"
+                      className="block text-sm font-medium text-gray-700"
+                    >
                       Compétences
                     </label>
                     <div className="mt-1 flex rounded-md shadow-sm">
@@ -302,16 +329,23 @@ const SignupForm = () => {
                             className="flex-shrink-0 ml-0.5 h-4 w-4 rounded-full inline-flex items-center justify-center text-indigo-400 hover:bg-indigo-200 hover:text-indigo-500 focus:outline-none focus:bg-indigo-500 focus:text-white"
                           >
                             <span className="sr-only">Supprimer {skill}</span>
-                            <svg className="h-2 w-2" stroke="currentColor" fill="none" viewBox="0 0 8 8">
-                              <path strokeLinecap="round" strokeWidth="1.5" d="M1 1l6 6m0-6L1 7" />
+                            <svg
+                              className="h-2 w-2"
+                              stroke="currentColor"
+                              fill="none"
+                              viewBox="0 0 8 8"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeWidth="1.5"
+                                d="M1 1l6 6m0-6L1 7"
+                              />
                             </svg>
                           </button>
                         </motion.span>
                       ))}
                     </div>
                   </div>
-
-                  
                 </div>
               </div>
 
@@ -332,7 +366,7 @@ const SignupForm = () => {
         </div>
       </motion.div>
     </div>
-  )
-}
+  );
+};
 
-export default SignupForm
+export default SignupForm;
