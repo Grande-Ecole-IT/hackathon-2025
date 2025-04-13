@@ -21,18 +21,18 @@ const SignupForm = () => {
   const [previewUrl, setPreviewUrl] = useState(null)
   const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
-
+  
   const sectors = [
-    "Technology",
-    "Healthcare",
-    "Education",
+    "Technologie",
+    "Santé",
+    "Éducation",
     "Finance",
     "Marketing",
     "Design",
-    "Manufacturing",
-    "Retail",
-    "Other",
-  ]
+    "Industrie manufacturière",
+    "Commerce de détail",
+    "Autre"
+]
 
   const handleChange = (e) => {
     const { name, value } = e.target

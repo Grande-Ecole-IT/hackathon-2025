@@ -5,7 +5,7 @@ import HomePage from "./pages/HomePage";
 import LandingPage from "./pages/LandingPage";
 import LaunchPlanPage from "./pages/LaunchPlanPage";
 import AuthProvider from "./providers/AuthProvider";
-import SignupForm from "./layout/SignupForm";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 const App = () => {
   return (
@@ -13,11 +13,10 @@ const App = () => {
       <AuthProvider>
         <Routes>
           <Route path="/" element={<LandingPage />} />
-          <Route path="/home" element={<HomePage />} />
-          <Route path="/analysis" element={<CVAnalysisDashboard />} />
-          <Route path="/business-ideas" element={<BusinessIdeasPage />}></Route>
-          <Route path="/plan" element={<LaunchPlanPage />}></Route>
-          <Route path="/register" element={<SignupForm/>}></Route>
+          <Route path="/home" element={<ProtectedRoute><HomePage /></ProtectedRoute>} />
+          <Route path="/analysis" element={<ProtectedRoute><CVAnalysisDashboard /></ProtectedRoute>} />
+          <Route path="/business-ideas" element={<ProtectedRoute><BusinessIdeasPage /></ProtectedRoute>}></Route>
+          <Route path="/plan" element={<ProtectedRoute><LaunchPlanPage /></ProtectedRoute>}></Route>
         </Routes>
       </AuthProvider>
     </Router>

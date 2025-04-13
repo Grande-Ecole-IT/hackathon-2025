@@ -3,7 +3,6 @@ import { AuthContext } from "../context/authContext"
 import { AuthService } from "../services/authService";
 import { DBService } from "../services/dbService";
 import { StorageService } from '../services/storageService';
-import { useNavigate } from "react-router";
 
 /**
  * AuthProvider component that provides authentication context to the application.
@@ -14,7 +13,6 @@ const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [userCompetences, setUserCompetences] = useState([]);
     const [initLoading, setInitLoading] = useState(false);
-    const navigate = useNavigate();
 
     const register = async ({ username, email, password,competences, profilePhoto }) => {
         const user = await AuthService.signUp(email, password, username);
@@ -52,13 +50,12 @@ const AuthProvider = ({ children }) => {
                 const competences = await DBService.listUserDocuments("competences", user.$id);
                 setUserCompetences(competences.documents);
                 setUser(user);
-                navigate("/home");
             } else setUser(null);
         } finally {
             setInitLoading(false)
         }
 
-    }, [navigate]);
+    }, []);
 
     useEffect(() => {
         init();

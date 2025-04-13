@@ -22,11 +22,12 @@ import {
   Users,
   Video,
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link } from "react-router";
 import { motion } from "framer-motion";
 import Navbar from "../components/Navbar";
 import BreadCrumb from "../components/BreadCrumb";
+import { useAuth } from '../hooks/useAuth';
 
 export default function BusinessIdeasPage() {
   return (
@@ -214,42 +215,56 @@ function StepCard({ step, title, desc, link, button, icon }) {
 
 function TabsSection() {
   const [activeTab, setActiveTab] = useState("match");
-  const endpoint = "https://hackathon-2025-back.onrender.com/business-idea";
+  const endpoint = useMemo(() => {
+    return "https://hackathon-2025-back.onrender.com/business-idea";
+  }, []);
   const [loading, setLoading] = useState(true);
   const [ideas, setIdeas] = useState([]);
   const [error, setError] = useState(null);
+  const {userCompetences, user} = useAuth();
 
+  const skills = useMemo(() => {
+    return userCompetences.map((competence) => competence.value) ?? "";
+  }, [userCompetences]);
 
-  const fetchBusinessIdeas = async () => {
-    try {
-      const response = await fetch(endpoint, {
-        method: "POST",
-        body: JSON.stringify({
-          sector: "technology",
-          skills: ["Design UX/UI", "Gestion de projet", "Développement Front-end"],
-        }),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      if (!response.ok) {
-        setError("Erreur lors de la récupération des données");
-        return;
+  const sector = useMemo(() => {
+    return user?.sector ?? "";
+  }, [user]);
+
+  const fetchBusinessIdeas = useCallback(
+    async () => {
+      try {
+        const response = await fetch(endpoint, {
+          method: "POST",
+          body: JSON.stringify({
+            sector,
+            skills,
+          }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+        if (!response.ok) {
+          setError("Erreur lors de la récupération des données");
+          return;
+        }
+        const result = await response.json();
+        console.log(result)
+        setIdeas(result);
       }
-      const result = await response.json();
-      console.log(result)
-      setIdeas(result);
-    }
-    catch (err) {
-      console.log(err);
-      setError("Erreur réseau");
-    } finally {
-      setLoading(false);
-    }
-  };
+      catch (err) {
+        console.log(err);
+        setError("Erreur réseau");
+      } finally {
+        setLoading(false);
+      }
+    },
+    [endpoint, sector, skills]
+  )
+
   useEffect(() => {
     fetchBusinessIdeas();
-  }, []);
+  }, [fetchBusinessIdeas]);
 
 
   return (
