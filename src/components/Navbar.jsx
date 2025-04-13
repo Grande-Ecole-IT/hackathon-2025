@@ -2,6 +2,7 @@
 import { motion } from "framer-motion";
 import { Link, useNavigate } from "react-router";
 import { useAuth } from "../hooks/useAuth";
+import UserDropdown from "./UserDropdown";
 
 const Navbar = ({ afficherConnexion, afficherInscription }) => {
   const { user, logout } = useAuth();
@@ -69,44 +70,7 @@ const Navbar = ({ afficherConnexion, afficherInscription }) => {
           </div>
         </Link>
 
-        {/* Profil utilisateur avec déconnexion */}
-        <div className="flex items-center space-x-4">
-          <div className="flex items-center space-x-3">
-            <img
-              src={user?.picture}
-              alt="Profile"
-              className="w-10 h-10 rounded-full border-2 border-blue-100"
-            />
-            <div className="hidden md:block">
-              <h3 className="text-sm font-semibold text-gray-800">
-                {user?.name}
-              </h3>
-              <p className="text-xs text-gray-500">{user?.email}</p>
-            </div>
-          </div>
-
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="text-gray-500 hover:text-blue-600 p-2 rounded-lg hover:bg-blue-50 transition-colors"
-            title="Déconnexion"
-            onClick={handleLogout}
-          >
-            <svg
-              className="h-5 w-5"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
-              />
-            </svg>
-          </motion.button>
-        </div>
+        <UserDropdown />
       </div>
     </motion.nav>
   );
