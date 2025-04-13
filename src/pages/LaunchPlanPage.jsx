@@ -12,6 +12,8 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router";
+import Navbar from "../components/Navbar";
+import BreadCrumb from "../components/BreadCrumb";
 
 export default function LaunchPlanPage() {
   const [tab, setTab] = useState("steps");
@@ -19,6 +21,9 @@ export default function LaunchPlanPage() {
   return (
     <div className="container mx-auto px-4 md:px-6 py-12">
       {/* Header */}
+      <Navbar />
+      <BreadCrumb />
+
       <div className="flex flex-col items-center text-center mb-12">
         <Rocket className="h-12 w-12 text-blue-500 mb-4" />
         <h1 className="text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl mb-4">

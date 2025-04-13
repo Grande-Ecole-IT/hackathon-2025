@@ -8,7 +8,7 @@ const Navbar = ({ afficherConnexion, afficherInscription }) => {
   const navigate = useNavigate();
   return (
     <motion.nav
-      className="fixed top-0 left-0 right-0 z-50 backdrop-blur-md border-b border-gray-200"
+      className="fixed top-0 left-0 right-0 z-50 backdrop-blur-xl border-b border-gray-200"
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       transition={{ duration: 0.2 }}
