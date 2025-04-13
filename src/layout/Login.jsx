@@ -7,6 +7,7 @@ import { createPortal } from "react-dom";
 import FloatingWhiteElements from "../components/FloatingElements";
 import { useAuth } from '../hooks/useAuth';
 import { Loader } from "lucide-react";
+import { useNavigate } from "react-router";
 
 const LoginForm = ({ onClose, showRegister }) => {
   const {login} = useAuth();
@@ -18,6 +19,7 @@ const LoginForm = ({ onClose, showRegister }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate()
 
 
   const handleChange = (e) => {
@@ -31,7 +33,16 @@ const LoginForm = ({ onClose, showRegister }) => {
     e.preventDefault();
     setLoading(true);
     try {
-      await login(formData);
+      await login(formData)
+      .then(() => {
+        navigate("/home");
+        // Redirection ou action après la connexion réussie
+      })
+      .catch((error) => {
+        console.error("Login failed", error);
+        setError(error);
+      });
+  
       onClose();
     } catch (error) {
       console.error("Login failed", error);

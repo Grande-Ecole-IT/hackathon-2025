@@ -5,6 +5,7 @@ import HomePage from "./pages/HomePage";
 import LandingPage from "./pages/LandingPage";
 import LaunchPlanPage from "./pages/LaunchPlanPage";
 import AuthProvider from "./providers/AuthProvider";
+import SignupForm from "./layout/SignupForm";
 
 const App = () => {
   return (
@@ -16,6 +17,7 @@ const App = () => {
           <Route path="/analysis" element={<CVAnalysisDashboard />} />
           <Route path="/business-ideas" element={<BusinessIdeasPage />}></Route>
           <Route path="/plan" element={<LaunchPlanPage />}></Route>
+          <Route path="/register" element={<SignupForm/>}></Route>
         </Routes>
       </AuthProvider>
     </Router>

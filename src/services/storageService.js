@@ -25,8 +25,8 @@ export const StorageService = {
      *   }
      * }
      */
-    async uploadFile(file) {
-        return await storage.createFile(BUCKET_ID, ID.unique(), file);
+    async uploadFile(file, uniqueId) {
+        return await storage.createFile(BUCKET_ID, uniqueId, file);
     },
 
     /**

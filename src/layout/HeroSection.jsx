@@ -8,6 +8,7 @@ import { LineDashedMaterial } from "three";
 import robotAnimation from "../assets/animation/robot-3.json";
 import LoginForm from "./Login";
 import RegisterForm from "./Register";
+import SignupForm from "./SignupForm";
 
 extend({ LineDashedMaterial });
 
@@ -121,13 +122,14 @@ export default function Accueil() {
 
       <AnimatePresence>
         {afficherInscription && (
-          <RegisterForm
-            onClose={() => setAfficherInscription(false)}
-            showConnexion={() => {
-              setAfficherInscription(false);
-              setAfficherConnexion(true);
-            }}
-          />
+          // <RegisterForm
+          //   onClose={() => setAfficherInscription(false)}
+          //   showConnexion={() => {
+          //     setAfficherInscription(false);
+          //     setAfficherConnexion(true);
+          //   }}
+          // />
+          <SignupForm/>
         )}
       </AnimatePresence>
 
