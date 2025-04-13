@@ -86,18 +86,15 @@ const SignupForm = () => {
   const handleSubmit = (e) => {
     e.preventDefault()
     setLoading(true);
-    try {
-      register({...formData, competences : formData.skills}).then(() => {
-        navigate("/home")
-      
-    })
-    } catch (error) {
-      console.error("Registration failed", error)
+    register({...formData, competences : formData.skills}).then(() => {
+      navigate("/home");
+    }).catch((error) => {
+      console.error("Error during registration:", error);
     }
-    finally {
+    ).finally(() => {
       setLoading(false);
     }
-
+    )
   }
 
   return (
