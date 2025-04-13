@@ -7,6 +7,8 @@ import { AuthContext } from "../context/authContext";
  *   user: {
  *     $id: string,
  *     username: string,
+ *     picture: string,
+ *     competences: Array,
  *     email: string
  *   } | null,
  *   isConnected: boolean,

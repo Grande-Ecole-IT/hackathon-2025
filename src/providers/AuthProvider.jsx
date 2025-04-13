@@ -1,7 +1,8 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { AuthContext } from "../context/authContext"
 import { AuthService } from "../services/authService";
 import { DBService } from "../services/dbService";
+import { StorageService } from '../services/storageService';
 
 /**
  * AuthProvider component that provides authentication context to the application.
@@ -10,17 +11,28 @@ import { DBService } from "../services/dbService";
 const AuthProvider = ({ children }) => {
 
     const [user, setUser] = useState(null);
+    const [userCompetences, setUserCompetences] = useState([]);
     const [initLoading, setInitLoading] = useState(false);
 
-    const register = async ({ username, email, password }) => {
+    const register = async ({ username, email, password,competences, profilePhoto }) => {
         const user = await AuthService.signUp(email, password, username);
-        await DBService.createDocumentWithId("users", user.$id, { username, email });
+        await StorageService.uploadFile(profilePhoto, user.$id);
+        const picture = StorageService.getFileView(user.$id);
+        competences.map(async (value) => {
+            await DBService.createDocument("competences", {
+                value,
+                userId: user.$id
+            });
+        }
+        )
+        await DBService.createDocumentWithId("users", user.$id, { username, email, picture });
         setUser(user);
     };
 
     const login = async ({ email, password }) => {
-        const session = await AuthService.signIn(email, password);
-        const user = await DBService.getDocument("users", session.$id);
+        await AuthService.signIn(email, password);
+        const userAuth = await AuthService.getCurrentUser();
+        const user = await DBService.getDocument("users", userAuth.$id);
         setUser(user);
     };
 
@@ -29,26 +41,29 @@ const AuthProvider = ({ children }) => {
         await AuthService.signOut();
     }
 
-    const init = async () => {
+    const init = useCallback(async () => {
         try {
             setInitLoading(true);
             const session = await AuthService.getCurrentUser();
             if (session) {
                 const user = await DBService.getDocument("users", session.$id);
+                const competences = await DBService.listUserDocuments("competences", user.$id);
+                setUserCompetences(competences.documents);
                 setUser(user);
             } else setUser(null);
         } finally {
             setInitLoading(false)
         }
 
-    }
+    }, []);
 
     useEffect(() => {
         init();
-    }, [])
+    }, [init])
 
     const value = {
         user,
+        userCompetences,
         initLoading,
         register,
         login,

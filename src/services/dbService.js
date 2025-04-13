@@ -1,5 +1,5 @@
 import { APPWRITE_DATABASE_ID } from '../config/env';
-import { databases, ID } from '../lib/appwrite/configAppwrite';
+import { databases, ID, Query } from '../lib/appwrite/configAppwrite';
 
 const DATABASE_ID = APPWRITE_DATABASE_ID;
 
@@ -25,7 +25,9 @@ export const DBService = {
     async listDocuments(COLLECTION_ID, query = []) {
         return await databases.listDocuments(DATABASE_ID, COLLECTION_ID, query.length > 0 ? query : undefined);
     },
-
+    async listUserDocuments(COLLECTION_ID, userId) {
+        return await databases.listDocuments(DATABASE_ID, COLLECTION_ID, [Query.equal('userId', userId)]);
+    },
     async getDocument(COLLECTION_ID, id, query = []) {
         return await databases.getDocument(DATABASE_ID, COLLECTION_ID, id, query.length > 0 ? query : undefined);
     },
