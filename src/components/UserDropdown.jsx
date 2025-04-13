@@ -3,11 +3,21 @@ import { AnimatePresence, motion } from "framer-motion";
 import { ChevronDown, LogOut, Settings, User } from "lucide-react";
 import { useState } from "react";
 import { useAuth } from "../hooks/useAuth";
+import { useNavigate } from "react-router";
 
 const UserDropdown = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { user, logout } = useAuth();
-
+  const navigate = useNavigate();
+  const handleLogout = async (e) => {
+    e.preventDefault();
+    try {
+      await logout();
+      navigate("/");
+    } catch (error) {
+      console.error("Logout error:", error);
+    }
+  }
   return (
     <div className="relative">
       {/* Bouton déclencheur */}
@@ -79,7 +89,7 @@ const UserDropdown = () => {
             </button>
 
             <button
-              onClick={logout}
+              onClick={handleLogout}
               className="w-full px-4 py-2 text-left text-sm flex items-center gap-2
               hover:bg-gray-100 dark:hover:bg-gray-700
               text-gray-700 dark:text-gray-300"

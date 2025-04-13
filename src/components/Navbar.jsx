@@ -5,19 +5,7 @@ import { useAuth } from "../hooks/useAuth";
 import UserDropdown from "./UserDropdown";
 
 const Navbar = ({ afficherConnexion, afficherInscription }) => {
-  const { user, logout } = useAuth();
   const navigate = useNavigate();
-
-  const handleLogout = async (e) => {
-    e.preventDefault();
-
-    try {
-      await logout();
-      navigate("/login");
-    } catch (error) {
-      console.error("Logout error:", error);
-    }
-  };
   return (
     <motion.nav
       className="fixed top-0 left-0 right-0 z-50 backdrop-blur-md border-b border-gray-200"
