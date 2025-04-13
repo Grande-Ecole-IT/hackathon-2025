@@ -25,11 +25,15 @@ import {
 import { useEffect, useState } from "react";
 import { Link } from "react-router";
 import { motion } from "framer-motion";
+import Navbar from "../components/Navbar";
+import BreadCrumb from "../components/BreadCrumb";
 
 export default function BusinessIdeasPage() {
   return (
     <div className="container mx-auto px-4 md:px-6 py-12">
       {/* Header avec animation et dégradé */}
+      <Navbar />
+      <BreadCrumb />
       <div className="flex flex-col items-center text-center mb-16">
         <div className="relative mb-6">
           <Lightbulb className="h-14 w-14 text-blue-500 z-10 relative" />
