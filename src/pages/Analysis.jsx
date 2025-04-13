@@ -6,14 +6,18 @@ import {
   ChevronUp,
   Code,
   FileText,
+  MessageCircle,
   TrendingUp,
   UserCheck,
+  X,
   Zap,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Doughnut } from "react-chartjs-2";
 import { useLocation } from "react-router";
 import Navbar from "../components/Navbar";
+import FloatingChatBot from "../components/FloatingChatBot";
+import BreadCrumb from "../components/BreadCrumb";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -25,6 +29,7 @@ export default function CVAnalysisDashboard() {
   const [expandedSkill, setExpandedSkill] = useState(null);
   const [showFullScoreDescription, setShowFullScoreDescription] =
     useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
   // Couleurs du thème cohérentes avec le reste de l'application
   const themeColors = {
@@ -79,10 +84,10 @@ export default function CVAnalysisDashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50/30 to-violet-50/30">
+    <div className={`min-h-screen bg-gradient-to-br from-blue-50/30 to-violet-50/30`}>
       <Navbar />
-
-      <div className="container mx-auto px-4 py-6 pt-24">
+      <BreadCrumb />
+      <div className="container mx-auto px-4 py-6 pt-24 mt-14">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Colonne gauche - Score et Compétences */}
           <div className="space-y-6">
@@ -362,6 +367,24 @@ export default function CVAnalysisDashboard() {
           </div>
         </div>
       </div>
+      {/* Floating Chat Button */}
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className="fixed bottom-6 right-6 z-50 bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-4 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110"
+        aria-label="Ouvrir le chat"
+      >
+        {isOpen ? (
+          <X className="h-6 w-6" />
+        ) : (
+          <div className="relative">
+            <MessageCircle className="h-6 w-6" />
+            <span className="absolute -top-1 -right-1 h-4 w-4 bg-red-500 rounded-full flex items-center justify-center text-xs text-white animate-pulse">
+              1
+            </span>
+          </div>
+        )}
+      </button>
+      <FloatingChatBot isOpen={isOpen} setIsOpen={setIsOpen} />
     </div>
   );
 }
