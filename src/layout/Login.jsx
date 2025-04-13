@@ -5,13 +5,20 @@ import { Eye, EyeOff, Lock, Mail, X } from "lucide-react";
 import { useState } from "react";
 import { createPortal } from "react-dom";
 import FloatingWhiteElements from "../components/FloatingElements";
+import { useAuth } from '../hooks/useAuth';
+import { Loader } from "lucide-react";
 
 const LoginForm = ({ onClose, showRegister }) => {
+  const {login} = useAuth();
+  const {register} = useAuth()
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
   const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
+
 
   const handleChange = (e) => {
     setFormData({
@@ -19,6 +26,21 @@ const LoginForm = ({ onClose, showRegister }) => {
       [e.target.name]: e.target.value,
     });
   };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      await login(formData);
+      onClose();
+    } catch (error) {
+      console.error("Login failed", error);
+      setError(error);
+    }
+    finally {
+      setLoading(false);
+    }
+  }
 
   return createPortal(
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
@@ -54,7 +76,7 @@ const LoginForm = ({ onClose, showRegister }) => {
               <p className="text-gray-500">Sign in to your account</p>
             </div>
 
-            <form className="space-y-6">
+            <form className="space-y-6" onSubmit={handleSubmit}>
               {/* Champs du formulaire */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -134,9 +156,10 @@ const LoginForm = ({ onClose, showRegister }) => {
               <div>
                 <button
                   type="submit"
-                  className="w-full py-3 px-4 border border-transparent rounded-lg shadow-sm text-white bg-gradient-to-r from-violet-500 to-blue-500 hover:from-violet-600 hover:to-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-violet-500 transition"
+                  className="flex space-x-4 items-center justify-center w-full py-3 px-4 border border-transparent rounded-lg shadow-sm text-white bg-gradient-to-r from-violet-500 to-blue-500 hover:from-violet-600 hover:to-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-violet-500 transition"
                 >
-                  Sign in
+                  {loading &&<Loader className="animate-spin"/>}
+                  <span>Sign in</span>
                 </button>
               </div>
             </form>
