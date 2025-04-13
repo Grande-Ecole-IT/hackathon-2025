@@ -31,7 +31,7 @@ import { useAuth } from '../hooks/useAuth';
 
 export default function BusinessIdeasPage() {
   return (
-    <div className="container mx-auto px-4 md:px-6 py-12">
+    <div className="container mx-auto px-20 md:px-6 py-12">
       {/* Header avec animation et dégradé */}
       <Navbar />
       <BreadCrumb />
@@ -407,13 +407,7 @@ function BusinessIdeaCard({
             <Bookmark className="h-4 w-4 text-gray-500 hover:text-blue-500" />
           </button>
         </div>
-        <Link
-          to={ideaLink}
-          className="bg-gradient-to-r from-blue-500 to-violet-500 text-white px-4 py-2 rounded-lg hover:shadow-md transition-all flex items-center"
-        >
-          Explorer cette idée
-          <ArrowRight className="ml-2 h-4 w-4" />
-        </Link>
+        
       </div>
     </div>
   );

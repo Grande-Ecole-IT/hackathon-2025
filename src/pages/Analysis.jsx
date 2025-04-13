@@ -84,10 +84,10 @@ export default function CVAnalysisDashboard() {
   };
 
   return (
-    <div className={`min-h-screen bg-gradient-to-br from-blue-50/30 to-violet-50/30`}>
+    <div className={`min-h-screen bg-gradient-to-br from-blue-50/30 to-violet-50/30 px-20`}>
       <Navbar />
       <BreadCrumb />
-      <div className="container mx-auto px-4 py-6 pt-24 mt-14">
+      <div className="container mx-auto  py-6 pt-24 mt-14">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Colonne gauche - Score et Compétences */}
           <div className="space-y-6">
@@ -154,7 +154,7 @@ export default function CVAnalysisDashboard() {
             </div>
 
             {/* Compétences Techniques */}
-            <div className="bg-white/90 backdrop-blur-sm rounded-xl border-2 border-blue-100/50 shadow-sm p-6">
+            <div className="bg-white/90 backdrop-blur-sm rounded-xl border-2 border-blue-100/50 shadow-sm p-6 px-20">
               <div className="flex items-center gap-3 mb-4">
                 <div className="p-2 rounded-lg bg-blue-100/50 text-blue-600">
                   <Code className="h-5 w-5" />

@@ -8,12 +8,12 @@ const Navbar = ({ afficherConnexion, afficherInscription }) => {
   const navigate = useNavigate();
   return (
     <motion.nav
-      className="fixed top-0 left-0 right-0 z-50 backdrop-blur-xl border-b border-gray-200"
+      className="fixed top-0 left-0 right-0 z-50 backdrop-blur-xl border-b border-gray-200 "
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       transition={{ duration: 0.2 }}
     >
-      <div className="container mx-auto px-4 py-4 flex justify-between items-center">
+      <div className="container mx-auto px-20 py-4 flex justify-between items-center">
         <Link to="/" className="flex items-center gap-3 group">
           {/* Logo avec symbole IA intégré */}
           <div className="relative w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-violet-600 flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300">
