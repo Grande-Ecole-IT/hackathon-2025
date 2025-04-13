@@ -26,7 +26,7 @@ const AuthProvider = ({ children }) => {
         }
         )
         await DBService.createDocumentWithId("users", user.$id, { username, email, picture });
-        setUser(user);
+        await login({ email, password });
     };
 
     const login = async ({ email, password }) => {
